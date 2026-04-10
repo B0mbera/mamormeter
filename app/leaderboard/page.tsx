@@ -129,7 +129,7 @@ export default function LeaderboardPage() {
                         : u.totalPromille.toFixed(2)}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {period === "alltime" ? (locale === "hu" ? "std" : "std") : "‰"}
+                      {period === "alltime" ? "std" : "‰"}
                     </span>
                   </div>
                 ))}
