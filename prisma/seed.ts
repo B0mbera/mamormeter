@@ -6,13 +6,10 @@ async function main() {
   await prisma.drinkPreset.deleteMany();
 
   const presets = [
-    // === Sörök (Pécsi sörök, 2dl és 4dl) ===
-    { name: "Pécsi Világos 2dl", nameEn: "Pécsi Lager 2dl", ml: 200, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Pécsi Világos 4dl", nameEn: "Pécsi Lager 4dl", ml: 400, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Pécsi Prémium 2dl", nameEn: "Pécsi Premium 2dl", ml: 200, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Pécsi Prémium 4dl", nameEn: "Pécsi Premium 4dl", ml: 400, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Szalonka 2dl", nameEn: "Szalonka 2dl", ml: 200, alcoholPct: 5.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Szalonka 4dl", nameEn: "Szalonka 4dl", ml: 400, alcoholPct: 5.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    // === Sörök (5dl) ===
+    { name: "Pécsi Világos 5dl", nameEn: "Pécsi Lager 5dl", ml: 500, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Pécsi Prémium 5dl", nameEn: "Pécsi Premium 5dl", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Heineken 5dl", nameEn: "Heineken 5dl", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
 
     // === Tömény (Medikus Kupa klasszikusok) ===
     { name: "Jägermeister", nameEn: "Jägermeister", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🦌" },

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { DrinkPreset } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const presets = await prisma.drinkPreset.findMany({
