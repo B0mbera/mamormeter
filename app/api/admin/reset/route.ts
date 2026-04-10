@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
     const drinks = await prisma.drink.deleteMany({});
     const users = await prisma.user.deleteMany({});
     return NextResponse.json({ deleted: { drinks: drinks.count, users: users.count } });
-  } catch {
+  } catch (err) {
+    console.error("Admin reset error:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
