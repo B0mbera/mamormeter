@@ -27,6 +27,7 @@ export default function AddDrinkPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
   const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
+  const _hasHydrated = useUserStore((s) => s._hasHydrated);
   const { t } = useLanguageStore();
 
   const [presets, setPresets] = useState<DrinkPreset[]>([]);
@@ -71,12 +72,13 @@ export default function AddDrinkPage() {
   }, [userId]);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!userId) {
       router.replace("/onboarding");
       return;
     }
     fetchData();
-  }, [userId, router, fetchData]);
+  }, [userId, router, fetchData, _hasHydrated]);
 
   async function addCustomDrink() {
     if (!userId || loading) return;

@@ -20,6 +20,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
   const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
+  const _hasHydrated = useUserStore((s) => s._hasHydrated);
   const { locale } = useLanguageStore();
 
   const [user, setUser] = useState<User | null>(null);
@@ -117,12 +118,13 @@ export default function DashboardPage() {
   }, [userId, router, locale]);
 
   useEffect(() => {
+    if (!_hasHydrated) return;
     if (!userId) {
       router.replace("/onboarding");
       return;
     }
     fetchData();
-  }, [userId, router, fetchData]);
+  }, [userId, router, fetchData, _hasHydrated]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
