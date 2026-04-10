@@ -34,7 +34,7 @@ export default function OnboardingPage() {
       toast.error(t("validation.nameRequired"));
       return;
     }
-    if (name.trim().length > 30) {
+    if (name.trim().length > 20) {
       toast.error(t("validation.nameTooLong"));
       return;
     }
@@ -100,7 +100,7 @@ export default function OnboardingPage() {
                 placeholder={t("onboarding.namePlaceholder")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                maxLength={30}
+                maxLength={20}
               />
             </div>
 
@@ -109,7 +109,7 @@ export default function OnboardingPage() {
               <Label>{t("onboarding.weight")}: {weight} kg</Label>
               <Slider
                 min={30}
-                max={200}
+                max={250}
                 step={1}
                 value={[weight]}
                 onValueChange={([v]) => setWeight(v)}

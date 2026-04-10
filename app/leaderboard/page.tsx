@@ -153,7 +153,7 @@ export default function LeaderboardPage() {
               </p>
             ) : entries.length === 0 ? (
               <p className="text-center text-sm text-muted-foreground py-8">
-                🍺 {t("leaderboard.empty")}
+                🍺 {t("leaderboard.emptyAlltime")}
               </p>
             ) : (
               entries.map((entry) => (
