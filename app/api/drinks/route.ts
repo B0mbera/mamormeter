@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
     if (
       !body.userId ||
       !body.name?.trim() ||
-      !body.ml ||
+      body.ml === undefined ||
+      body.ml === null ||
       body.alcoholPct === undefined
     ) {
       return NextResponse.json(
@@ -40,6 +41,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate optional consumedAt
+    let consumedAt: Date | undefined;
+    if (body.consumedAt) {
+      const parsed = new Date(body.consumedAt);
+      if (isNaN(parsed.getTime())) {
+        return NextResponse.json(
+          { error: "Invalid consumedAt date" },
+          { status: 400 }
+        );
+      }
+      // Cap to current time – cannot log future drinks
+      consumedAt = parsed > new Date() ? new Date() : parsed;
+    }
+
     const user = await prisma.user.findUnique({
       where: { id: body.userId },
     });
@@ -51,23 +66,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Cooldown check: last drink must be > COOLDOWN_SECONDS ago
-    const lastDrink = await prisma.drink.findFirst({
-      where: { userId: body.userId },
-      orderBy: { consumedAt: "desc" },
-    });
+    // Cooldown only applies when no custom consumedAt is provided (i.e. logging "now").
+    // Historical entries (with an explicit past consumedAt) bypass the cooldown.
+    if (!consumedAt) {
+      const recentDrink = await prisma.drink.findFirst({
+        where: {
+          userId: body.userId,
+          consumedAt: { gte: new Date(Date.now() - COOLDOWN_SECONDS * 1000) },
+        },
+        orderBy: { consumedAt: "desc" },
+      });
 
-    if (lastDrink) {
-      const elapsed =
-        (Date.now() - new Date(lastDrink.consumedAt).getTime()) / 1000;
-      if (elapsed < COOLDOWN_SECONDS) {
-        const remaining = Math.ceil(COOLDOWN_SECONDS - elapsed);
-        return NextResponse.json(
-          {
-            error: `Cooldown: wait ${remaining} seconds`,
-          },
-          { status: 429 }
-        );
+      if (recentDrink) {
+        const elapsed =
+          (Date.now() - new Date(recentDrink.consumedAt).getTime()) / 1000;
+        if (elapsed < COOLDOWN_SECONDS) {
+          const remaining = Math.ceil(COOLDOWN_SECONDS - elapsed);
+          return NextResponse.json(
+            {
+              error: `Cooldown: wait ${remaining} seconds`,
+            },
+            { status: 429 }
+          );
+        }
       }
     }
 
@@ -77,6 +98,7 @@ export async function POST(request: NextRequest) {
         name: body.name.trim().slice(0, 50),
         ml: Math.round(body.ml),
         alcoholPct: Math.round(body.alcoholPct * 10) / 10,
+        ...(consumedAt ? { consumedAt } : {}),
       },
     });
 

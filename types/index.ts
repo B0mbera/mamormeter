@@ -83,6 +83,15 @@ export interface CreateDrinkPayload {
   name: string;
   ml: number;
   alcoholPct: number;
+  consumedAt?: string;
+}
+
+export interface UniversityLeaderboardEntry {
+  universityId: string;
+  totalAlcoholGrams: number;
+  avgPromille: number;
+  memberCount: number;
+  rank: number;
 }
 
 export interface ApiResponse<T> {

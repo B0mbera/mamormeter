@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import Image from "next/image";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const userId = useUserStore((s) => s.userId);
   const setUserId = useUserStore((s) => s.setUserId);
   const { t } = useLanguageStore();
 
@@ -26,6 +27,14 @@ export default function OnboardingPage() {
   const [gender, setGender] = useState<"male" | "female">("male");
   const [university, setUniversity] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // If a session is already active, redirect straight to the dashboard.
+  // This prevents re-registration and nickname changes.
+  useEffect(() => {
+    if (userId) {
+      router.replace("/dashboard");
+    }
+  }, [userId, router]);
 
   async function handleSubmit() {
     if (!name.trim()) {
@@ -73,6 +82,15 @@ export default function OnboardingPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  // Show a spinner while checking session
+  if (userId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="text-5xl">🍻</span>
+      </div>
+    );
   }
 
   return (

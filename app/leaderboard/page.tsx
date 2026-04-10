@@ -9,7 +9,8 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
-import { LeaderboardEntry } from "@/types";
+import { UniversityLeaderboardCard } from "@/components/UniversityLeaderboardCard";
+import { LeaderboardEntry, UniversityLeaderboardEntry } from "@/types";
 import { UNIVERSITIES } from "@/lib/constants";
 import { Trophy, ArrowLeft } from "lucide-react";
 import Image from "next/image";
@@ -19,9 +20,11 @@ export default function LeaderboardPage() {
   const userId = useUserStore((s) => s.userId);
   const { t } = useLanguageStore();
 
+  const [view, setView] = useState<"individual" | "university">("individual");
   const [period, setPeriod] = useState<"24h" | "alltime">("24h");
   const [uniFilter, setUniFilter] = useState<string | null>(null);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [uniEntries, setUniEntries] = useState<UniversityLeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchLeaderboard = useCallback(async () => {
@@ -30,11 +33,16 @@ export default function LeaderboardPage() {
       let url = `/api/leaderboard?period=${period}`;
       if (uniFilter) url += `&university=${uniFilter}`;
 
-      const res = await fetch(url);
-      if (!res.ok) return;
+      const uniUrl = `/api/leaderboard/university?period=${period}`;
 
-      const data = await res.json();
-      setEntries(data);
+      const [res, uniRes] = await Promise.all([fetch(url), fetch(uniUrl)]);
+
+      if (res.ok) {
+        setEntries(await res.json());
+      }
+      if (uniRes.ok) {
+        setUniEntries(await uniRes.json());
+      }
     } catch {
       // ignore
     } finally {
@@ -46,9 +54,9 @@ export default function LeaderboardPage() {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  // Auto-refresh every 30s
+  // Auto-refresh every 5s
   useEffect(() => {
-    const interval = setInterval(fetchLeaderboard, 30000);
+    const interval = setInterval(fetchLeaderboard, 5000);
     return () => clearInterval(interval);
   }, [fetchLeaderboard]);
 
@@ -80,6 +88,26 @@ export default function LeaderboardPage() {
           53. Medikus Kupa · Pécs 2026
         </p>
 
+        {/* View toggle: Individual vs University */}
+        <div className="flex gap-1.5">
+          <Button
+            size="sm"
+            variant={view === "individual" ? "default" : "outline"}
+            className="flex-1 h-8 text-xs"
+            onClick={() => setView("individual")}
+          >
+            {t("leaderboard.title")}
+          </Button>
+          <Button
+            size="sm"
+            variant={view === "university" ? "default" : "outline"}
+            className="flex-1 h-8 text-xs"
+            onClick={() => setView("university")}
+          >
+            {t("leaderboard.university")}
+          </Button>
+        </div>
+
         {/* Period tabs */}
         <Tabs
           value={period}
@@ -91,85 +119,126 @@ export default function LeaderboardPage() {
             <TabsTrigger value="alltime">{t("leaderboard.alltime")}</TabsTrigger>
           </TabsList>
 
-          {/* University filter */}
-          <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
-              <Button
-                size="sm"
-                variant={uniFilter === null ? "default" : "outline"}
-                className="h-7 text-[10px] sm:text-xs shrink-0"
-                onClick={() => setUniFilter(null)}
-              >
-                {t("leaderboard.allUnis")}
-              </Button>
-              {UNIVERSITIES.map((uni) => (
+          {view === "individual" && (
+            <>
+              {/* University filter */}
+              <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
                 <Button
-                  key={uni.id}
                   size="sm"
-                  variant={uniFilter === uni.id ? "default" : "outline"}
-                  className="h-7 text-[10px] sm:text-xs shrink-0 gap-1"
-                  style={
-                    uniFilter === uni.id
-                      ? { backgroundColor: uni.color, borderColor: uni.color }
-                      : {}
-                  }
-                  onClick={() => setUniFilter(uni.id)}
+                  variant={uniFilter === null ? "default" : "outline"}
+                  className="h-7 text-[10px] sm:text-xs shrink-0"
+                  onClick={() => setUniFilter(null)}
                 >
-                  <Image
-                    src={uni.logo}
-                    alt={uni.id}
-                    width={14}
-                    height={14}
-                    className="rounded-sm"
-                  />
-                  {uni.id}
+                  {t("leaderboard.allUnis")}
                 </Button>
-              ))}
-            </div>
+                {UNIVERSITIES.map((uni) => (
+                  <Button
+                    key={uni.id}
+                    size="sm"
+                    variant={uniFilter === uni.id ? "default" : "outline"}
+                    className="h-7 text-[10px] sm:text-xs shrink-0 gap-1"
+                    style={
+                      uniFilter === uni.id
+                        ? { backgroundColor: uni.color, borderColor: uni.color }
+                        : {}
+                    }
+                    onClick={() => setUniFilter(uni.id)}
+                  >
+                    <Image
+                      src={uni.logo}
+                      alt={uni.id}
+                      width={14}
+                      height={14}
+                      className="rounded-sm"
+                    />
+                    {uni.id}
+                  </Button>
+                ))}
+              </div>
 
-          <TabsContent value="24h" className="space-y-2 mt-2">
-            {loading ? (
-              <p className="text-center text-sm text-muted-foreground py-8">
-                ⏳
-              </p>
-            ) : entries.length === 0 ? (
-              <p className="text-center text-sm text-muted-foreground py-8">
-                🍺 {t("leaderboard.empty")}
-              </p>
-            ) : (
-              entries.map((entry) => (
-                <LeaderboardCard
-                  key={entry.user.id}
-                  entry={entry}
-                  isCurrentUser={entry.user.id === userId}
-                  mode="24h"
-                />
-              ))
-            )}
-          </TabsContent>
+              <TabsContent value="24h" className="space-y-2 mt-2">
+                {loading ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">⏳</p>
+                ) : entries.length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">
+                    🍺 {t("leaderboard.empty")}
+                  </p>
+                ) : (
+                  entries.map((entry) => (
+                    <LeaderboardCard
+                      key={entry.user.id}
+                      entry={entry}
+                      isCurrentUser={entry.user.id === userId}
+                      mode="24h"
+                    />
+                  ))
+                )}
+              </TabsContent>
 
-          <TabsContent value="alltime" className="space-y-2 mt-2">
-            {loading ? (
-              <p className="text-center text-sm text-muted-foreground py-8">
-                ⏳
-              </p>
-            ) : entries.length === 0 ? (
-              <p className="text-center text-sm text-muted-foreground py-8">
-                🍺 {t("leaderboard.emptyAlltime")}
-              </p>
-            ) : (
-              entries.map((entry) => (
-                <LeaderboardCard
-                  key={entry.user.id}
-                  entry={entry}
-                  isCurrentUser={entry.user.id === userId}
-                  mode="alltime"
-                />
-              ))
-            )}
-          </TabsContent>
+              <TabsContent value="alltime" className="space-y-2 mt-2">
+                {loading ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">⏳</p>
+                ) : entries.length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">
+                    🍺 {t("leaderboard.emptyAlltime")}
+                  </p>
+                ) : (
+                  entries.map((entry) => (
+                    <LeaderboardCard
+                      key={entry.user.id}
+                      entry={entry}
+                      isCurrentUser={entry.user.id === userId}
+                      mode="alltime"
+                    />
+                  ))
+                )}
+              </TabsContent>
+            </>
+          )}
+
+          {view === "university" && (
+            <>
+              <TabsContent value="24h" className="space-y-2 mt-2">
+                {loading ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">⏳</p>
+                ) : uniEntries.filter((e) => e.memberCount > 0).length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">
+                    🍺 {t("leaderboard.emptyUni")}
+                  </p>
+                ) : (
+                  uniEntries.map((entry) => (
+                    <UniversityLeaderboardCard
+                      key={entry.universityId}
+                      entry={entry}
+                      mode="24h"
+                    />
+                  ))
+                )}
+              </TabsContent>
+
+              <TabsContent value="alltime" className="space-y-2 mt-2">
+                {loading ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">⏳</p>
+                ) : uniEntries.filter((e) => e.memberCount > 0).length === 0 ? (
+                  <p className="text-center text-sm text-muted-foreground py-8">
+                    🍺 {t("leaderboard.emptyAlltime")}
+                  </p>
+                ) : (
+                  uniEntries.map((entry) => (
+                    <UniversityLeaderboardCard
+                      key={entry.universityId}
+                      entry={entry}
+                      mode="alltime"
+                    />
+                  ))
+                )}
+              </TabsContent>
+            </>
+          )}
         </Tabs>
       </div>
       {userId && <Navigation />}
     </div>
   );
 }
+

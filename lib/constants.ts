@@ -39,7 +39,7 @@ export const UNIVERSITIES: {
 
 export const COOLDOWN_SECONDS = 60;
 export const MAX_ML_PER_DRINK = 2000;
-export const MIN_ML_PER_DRINK = 10;
+export const MIN_ML_PER_DRINK = 0;
 export const MAX_ALCOHOL_PCT = 96;
 export const MAX_MULTIPLIER = 3;
 

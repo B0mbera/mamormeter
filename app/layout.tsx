@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { SessionInit } from "@/components/SessionInit";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="hu" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
+          <SessionInit />
           <main className="min-h-screen bg-gradient-to-b from-violet-50/50 to-white dark:from-background dark:to-background">
             {children}
           </main>

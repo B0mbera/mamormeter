@@ -23,6 +23,15 @@ import {
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
 
+/** Format a Date to a datetime-local input value (local time) */
+function toDatetimeLocal(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  );
+}
+
 export default function AddDrinkPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
@@ -34,6 +43,9 @@ export default function AddDrinkPage() {
   const [customName, setCustomName] = useState("");
   const [customMl, setCustomMl] = useState(100);
   const [customAlcohol, setCustomAlcohol] = useState(5);
+  const [customConsumedAt, setCustomConsumedAt] = useState<string>(
+    toDatetimeLocal(new Date())
+  );
   const [loading, setLoading] = useState(false);
 
   const fetchData = useCallback(async () => {
@@ -79,6 +91,15 @@ export default function AddDrinkPage() {
       return;
     }
 
+    // Determine consumedAt: use the chosen datetime (or now if blank)
+    const chosenDate = customConsumedAt
+      ? new Date(customConsumedAt)
+      : new Date();
+    const consumedAt =
+      isNaN(chosenDate.getTime()) || chosenDate > new Date()
+        ? undefined
+        : chosenDate.toISOString();
+
     setLoading(true);
     try {
       const res = await fetch("/api/drinks", {
@@ -89,6 +110,7 @@ export default function AddDrinkPage() {
           name: customName.trim(),
           ml: customMl,
           alcoholPct: customAlcohol,
+          ...(consumedAt ? { consumedAt } : {}),
         }),
       });
 
@@ -106,6 +128,7 @@ export default function AddDrinkPage() {
 
       toast.success(t("toast.drinkAdded", { name: customName.trim() }));
       setCustomName("");
+      setCustomConsumedAt(toDatetimeLocal(new Date()));
       setShowCustom(false);
       fetchData();
     } catch {
@@ -186,6 +209,16 @@ export default function AddDrinkPage() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <Label>{t("add.consumedAt")}</Label>
+                <Input
+                  type="datetime-local"
+                  value={customConsumedAt}
+                  max={toDatetimeLocal(new Date())}
+                  onChange={(e) => setCustomConsumedAt(e.target.value)}
+                />
+              </div>
+
               <Button
                 className="w-full"
                 onClick={addCustomDrink}
@@ -201,3 +234,4 @@ export default function AddDrinkPage() {
     </div>
   );
 }
+

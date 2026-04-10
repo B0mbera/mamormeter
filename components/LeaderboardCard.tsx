@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LeaderboardEntry } from "@/types";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getStatusText, getSoberingText } from "@/lib/i18n";
 import { getUniversity } from "@/lib/constants";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 
 interface LeaderboardCardProps {
@@ -21,15 +23,34 @@ function getRankDisplay(rank: number): string {
   return `${rank}.`;
 }
 
+/** Aggregate drinks into a human-readable summary like "3× Beer 5dl, 2× Vodka" */
+function getDrinkSummary(drinks: LeaderboardEntry["user"]["drinks"]): string {
+  if (drinks.length === 0) return "";
+  const counts: Record<string, number> = {};
+  for (const d of drinks) {
+    counts[d.name] = (counts[d.name] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([name, count]) => (count > 1 ? `${count}× ${name}` : name))
+    .join(", ");
+}
+
 export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardProps) {
   const { locale, t } = useLanguageStore();
   const { user, promille, totalAlcoholGrams, rank } = entry;
   const uni = getUniversity(user.university);
+  const [expanded, setExpanded] = useState(false);
 
   const standardDrinks = Math.round((totalAlcoholGrams / 10) * 10) / 10;
+  const drinkSummary = getDrinkSummary(user.drinks);
 
   return (
-    <Card className={isCurrentUser ? "border-primary/50 bg-primary/5" : ""}>
+    <Card
+      className={`cursor-pointer select-none transition-colors ${
+        isCurrentUser ? "border-primary/50 bg-primary/5" : ""
+      }`}
+      onClick={() => setExpanded((v) => !v)}
+    >
       <CardContent className="pt-3 pb-3 sm:pt-4 sm:pb-4">
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="text-xl sm:text-2xl font-bold w-8 sm:w-10 text-center shrink-0">
@@ -69,34 +90,59 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             </div>
           </div>
 
-          <div className="text-right shrink-0">
-            {mode === "24h" ? (
-              <>
-                <p
-                  className="text-xl sm:text-2xl font-bold tabular-nums"
-                  style={{ color: promille.statusColor }}
-                >
-                  {promille.currentPromille.toFixed(2)}‰
+          <div className="flex items-center gap-1 shrink-0">
+            <div className="text-right">
+              {mode === "24h" ? (
+                <>
+                  <p
+                    className="text-xl sm:text-2xl font-bold tabular-nums"
+                    style={{ color: promille.statusColor }}
+                  >
+                    {promille.currentPromille.toFixed(2)}‰
+                  </p>
+                  <Badge
+                    className="text-[9px] sm:text-[10px] mt-0.5"
+                    style={{
+                      backgroundColor: promille.statusColor,
+                      color: "white",
+                      borderColor: "transparent",
+                    }}
+                  >
+                    {getStatusText(promille.status, locale)}
+                  </Badge>
+                </>
+              ) : (
+                <p className="text-xl sm:text-2xl font-bold tabular-nums text-primary">
+                  {standardDrinks}
                 </p>
-                <Badge
-                  className="text-[9px] sm:text-[10px] mt-0.5"
-                  style={{
-                    backgroundColor: promille.statusColor,
-                    color: "white",
-                    borderColor: "transparent",
-                  }}
-                >
-                  {getStatusText(promille.status, locale)}
-                </Badge>
-              </>
-            ) : (
-              <p className="text-xl sm:text-2xl font-bold tabular-nums text-primary">
-                {standardDrinks}
-              </p>
-            )}
+              )}
+            </div>
+            <div className="text-muted-foreground ml-1">
+              {expanded ? (
+                <ChevronUp className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronDown className="h-3.5 w-3.5" />
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Expanded drink summary */}
+        {expanded && drinkSummary && (
+          <div className="mt-2 pt-2 border-t text-[11px] sm:text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">
+              {t("leaderboard.drinkSummary")}:
+            </span>{" "}
+            {drinkSummary}
+          </div>
+        )}
+        {expanded && !drinkSummary && (
+          <div className="mt-2 pt-2 border-t text-[11px] sm:text-xs text-muted-foreground">
+            {t("leaderboard.empty")}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
 }
+
