@@ -10,11 +10,6 @@ export const metadata: Metadata = {
   title: "MámorMéter — 53. Medikus Kupa · Pécs 2026",
   description: "Az 53. Medikus Kupa hivatalos promille trackere! 🍻 Kövesd az ivásod, versenyezz az egyetemed színeiben! Pécs, 2026. április 9-11.",
   manifest: "/manifest.json",
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-  },
   openGraph: {
     title: "MámorMéter — 53. Medikus Kupa",
     description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
