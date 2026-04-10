@@ -72,11 +72,7 @@ export async function GET(request: NextRequest) {
     }
 
     const entries: UniversityLeaderboardEntry[] = UNIVERSITIES.map((uni) => {
-      const data = uniMap[uni.id] || {
-        totalAlcoholGrams: 0,
-        sumPromille: 0,
-        memberCount: 0,
-      };
+      const data = uniMap[uni.id];
       return {
         universityId: uni.id,
         totalAlcoholGrams: Math.round(data.totalAlcoholGrams * 10) / 10,

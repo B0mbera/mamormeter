@@ -28,7 +28,8 @@ function getDrinkSummary(drinks: LeaderboardEntry["user"]["drinks"]): string {
   if (drinks.length === 0) return "";
   const counts: Record<string, number> = {};
   for (const d of drinks) {
-    counts[d.name] = (counts[d.name] || 0) + 1;
+    const label = d.ml > 0 ? `${d.name} ${d.ml}ml` : d.name;
+    counts[label] = (counts[label] || 0) + 1;
   }
   return Object.entries(counts)
     .map(([name, count]) => (count > 1 ? `${count}× ${name}` : name))

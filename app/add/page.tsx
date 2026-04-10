@@ -92,11 +92,10 @@ export default function AddDrinkPage() {
     }
 
     // Determine consumedAt: use the chosen datetime (or now if blank)
-    const chosenDate = customConsumedAt
-      ? new Date(customConsumedAt)
-      : new Date();
+    const now = new Date();
+    const chosenDate = customConsumedAt ? new Date(customConsumedAt) : now;
     const consumedAt =
-      isNaN(chosenDate.getTime()) || chosenDate > new Date()
+      isNaN(chosenDate.getTime()) || chosenDate > now
         ? undefined
         : chosenDate.toISOString();
 
