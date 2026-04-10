@@ -45,8 +45,8 @@ export function DrinkPresetGrid({
 
   const categories =
     locale === "en"
-      ? ["Beers", "Spirits", "Wine", "Cocktails"]
-      : ["Sörök", "Tömény", "Bor", "Koktél"];
+      ? ["Beers", "Spirits", "Wine", "Cocktails", "Other"]
+      : ["Sörök", "Tömény", "Bor", "Koktél", "Egyéb"];
 
   function getMultiplier(presetId: string): number {
     return multipliers[presetId] || 1;
@@ -120,7 +120,7 @@ export function DrinkPresetGrid({
         </div>
       )}
       <Tabs defaultValue={categories[0]} className="w-full">
-        <TabsList className="w-full grid grid-cols-4">
+        <TabsList className="w-full grid grid-cols-5">
           {categories.map((cat) => (
             <TabsTrigger key={cat} value={cat} className="text-[10px] sm:text-xs">
               {cat}

@@ -53,6 +53,8 @@ const translations = {
     "add.submit": "Hozzáadás",
     "add.submitting": "Hozzáadás...",
     "add.cooldownActive": "Várj még {seconds} mp-et!",
+    "add.consumedAt": "Mikor fogyasztottad el?",
+    "add.consumedAtHint": "Hagyd üresen ha most ittad",
 
     "leaderboard.title": "Ranglétra",
     "leaderboard.24h": "24 óra",
@@ -144,6 +146,8 @@ const translations = {
     "add.submit": "Add drink",
     "add.submitting": "Adding...",
     "add.cooldownActive": "Wait {seconds} sec!",
+    "add.consumedAt": "When did you consume it?",
+    "add.consumedAtHint": "Leave empty if just now",
 
     "leaderboard.title": "Leaderboard",
     "leaderboard.24h": "24 Hours",

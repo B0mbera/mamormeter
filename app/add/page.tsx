@@ -26,6 +26,7 @@ import { Plus } from "lucide-react";
 export default function AddDrinkPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
+  const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
   const { t } = useLanguageStore();
 
   const [presets, setPresets] = useState<DrinkPreset[]>([]);
@@ -34,7 +35,13 @@ export default function AddDrinkPage() {
   const [customName, setCustomName] = useState("");
   const [customMl, setCustomMl] = useState(100);
   const [customAlcohol, setCustomAlcohol] = useState(5);
+  const [customConsumedAt, setCustomConsumedAt] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Restore session from cookie on mount
+  useEffect(() => {
+    restoreFromCookie();
+  }, [restoreFromCookie]);
 
   const fetchData = useCallback(async () => {
     try {
@@ -81,15 +88,21 @@ export default function AddDrinkPage() {
 
     setLoading(true);
     try {
+      const body: Record<string, unknown> = {
+        userId,
+        name: customName.trim(),
+        ml: customMl,
+        alcoholPct: customAlcohol,
+      };
+
+      if (customConsumedAt) {
+        body.consumedAt = new Date(customConsumedAt).toISOString();
+      }
+
       const res = await fetch("/api/drinks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          name: customName.trim(),
-          ml: customMl,
-          alcoholPct: customAlcohol,
-        }),
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
@@ -106,6 +119,7 @@ export default function AddDrinkPage() {
 
       toast.success(t("toast.drinkAdded", { name: customName.trim() }));
       setCustomName("");
+      setCustomConsumedAt("");
       setShowCustom(false);
       fetchData();
     } catch {
@@ -184,6 +198,18 @@ export default function AddDrinkPage() {
                   value={[customAlcohol]}
                   onValueChange={([v]) => setCustomAlcohol(v)}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label>{t("add.consumedAt")}</Label>
+                <Input
+                  type="datetime-local"
+                  value={customConsumedAt}
+                  onChange={(e) => setCustomConsumedAt(e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  {t("add.consumedAtHint")}
+                </p>
               </div>
 
               <Button

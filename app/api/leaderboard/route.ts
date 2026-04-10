@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { calculatePromille, calculateTotalAlcoholGrams } from "@/lib/widmark";
-import { LeaderboardEntry } from "@/types";
+import { LeaderboardEntry, UniversityScore } from "@/types";
+import { UNIVERSITIES } from "@/lib/constants";
+
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
@@ -44,6 +47,16 @@ export async function GET(request: NextRequest) {
 
       const totalAlcoholGrams = calculateTotalAlcoholGrams(allDrinkInputs);
 
+      // Build drink summary: count each drink name
+      const drinkCounts: Record<string, number> = {};
+      const drinksToSummarize = period === "alltime" ? user.drinks : recentDrinks;
+      for (const d of drinksToSummarize) {
+        drinkCounts[d.name] = (drinkCounts[d.name] || 0) + 1;
+      }
+      const drinksSummary = Object.entries(drinkCounts).map(
+        ([name, count]) => (count > 1 ? `${count}× ${name}` : name)
+      );
+
       return {
         user: {
           id: user.id,
@@ -65,6 +78,7 @@ export async function GET(request: NextRequest) {
         promille,
         totalAlcoholGrams: Math.round(totalAlcoholGrams * 10) / 10,
         rank: 0,
+        drinksSummary,
       };
     });
 
@@ -84,7 +98,41 @@ export async function GET(request: NextRequest) {
       entry.rank = index + 1;
     });
 
-    return NextResponse.json(filtered);
+    // Build university combined scores
+    const uniScores: UniversityScore[] = UNIVERSITIES.map((uni) => {
+      const uniEntries = entries.filter((e) => e.user.university === uni.id);
+      const totalPromille = uniEntries.reduce(
+        (sum, e) => sum + e.promille.currentPromille,
+        0
+      );
+      const totalAlcoholGrams = uniEntries.reduce(
+        (sum, e) => sum + e.totalAlcoholGrams,
+        0
+      );
+      return {
+        universityId: uni.id,
+        name: uni.name,
+        nameEn: uni.nameEn,
+        color: uni.color,
+        logo: uni.logo,
+        totalPromille: Math.round(totalPromille * 100) / 100,
+        totalAlcoholGrams: Math.round(totalAlcoholGrams * 10) / 10,
+        memberCount: uniEntries.length,
+        rank: 0,
+      };
+    });
+
+    // Rank universities
+    if (period === "alltime") {
+      uniScores.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
+    } else {
+      uniScores.sort((a, b) => b.totalPromille - a.totalPromille);
+    }
+    uniScores.forEach((u, i) => {
+      u.rank = i + 1;
+    });
+
+    return NextResponse.json({ entries: filtered, universityScores: uniScores });
   } catch {
     return NextResponse.json(
       { error: "Server error" },

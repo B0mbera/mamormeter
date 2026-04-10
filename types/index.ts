@@ -63,6 +63,19 @@ export interface LeaderboardEntry {
   promille: PromilleResult;
   totalAlcoholGrams: number;
   rank: number;
+  drinksSummary: string[];
+}
+
+export interface UniversityScore {
+  universityId: string;
+  name: string;
+  nameEn: string;
+  color: string;
+  logo: string;
+  totalPromille: number;
+  totalAlcoholGrams: number;
+  memberCount: number;
+  rank: number;
 }
 
 export interface ChartDataPoint {
@@ -83,6 +96,7 @@ export interface CreateDrinkPayload {
   name: string;
   ml: number;
   alcoholPct: number;
+  consumedAt?: string;
 }
 
 export interface ApiResponse<T> {

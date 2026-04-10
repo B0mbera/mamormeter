@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LeaderboardEntry } from "@/types";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getStatusText, getSoberingText } from "@/lib/i18n";
 import { getUniversity } from "@/lib/constants";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import Image from "next/image";
 
 interface LeaderboardCardProps {
@@ -23,13 +25,17 @@ function getRankDisplay(rank: number): string {
 
 export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardProps) {
   const { locale, t } = useLanguageStore();
-  const { user, promille, totalAlcoholGrams, rank } = entry;
+  const { user, promille, totalAlcoholGrams, rank, drinksSummary } = entry;
   const uni = getUniversity(user.university);
+  const [expanded, setExpanded] = useState(false);
 
   const standardDrinks = Math.round((totalAlcoholGrams / 10) * 10) / 10;
 
   return (
-    <Card className={isCurrentUser ? "border-primary/50 bg-primary/5" : ""}>
+    <Card
+      className={`cursor-pointer ${isCurrentUser ? "border-primary/50 bg-primary/5" : ""}`}
+      onClick={() => setExpanded(!expanded)}
+    >
       <CardContent className="pt-3 pb-3 sm:pt-4 sm:pb-4">
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="text-xl sm:text-2xl font-bold w-8 sm:w-10 text-center shrink-0">
@@ -69,33 +75,53 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             </div>
           </div>
 
-          <div className="text-right shrink-0">
-            {mode === "24h" ? (
-              <>
-                <p
-                  className="text-xl sm:text-2xl font-bold tabular-nums"
-                  style={{ color: promille.statusColor }}
-                >
-                  {promille.currentPromille.toFixed(2)}‰
+          <div className="flex items-center gap-1 shrink-0">
+            <div className="text-right">
+              {mode === "24h" ? (
+                <>
+                  <p
+                    className="text-xl sm:text-2xl font-bold tabular-nums"
+                    style={{ color: promille.statusColor }}
+                  >
+                    {promille.currentPromille.toFixed(2)}‰
+                  </p>
+                  <Badge
+                    className="text-[9px] sm:text-[10px] mt-0.5"
+                    style={{
+                      backgroundColor: promille.statusColor,
+                      color: "white",
+                      borderColor: "transparent",
+                    }}
+                  >
+                    {getStatusText(promille.status, locale)}
+                  </Badge>
+                </>
+              ) : (
+                <p className="text-xl sm:text-2xl font-bold tabular-nums text-primary">
+                  {standardDrinks}
                 </p>
-                <Badge
-                  className="text-[9px] sm:text-[10px] mt-0.5"
-                  style={{
-                    backgroundColor: promille.statusColor,
-                    color: "white",
-                    borderColor: "transparent",
-                  }}
-                >
-                  {getStatusText(promille.status, locale)}
-                </Badge>
-              </>
-            ) : (
-              <p className="text-xl sm:text-2xl font-bold tabular-nums text-primary">
-                {standardDrinks}
-              </p>
+              )}
+            </div>
+            {drinksSummary && drinksSummary.length > 0 && (
+              <div className="text-muted-foreground ml-1">
+                {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              </div>
             )}
           </div>
         </div>
+
+        {/* Expanded drinks detail */}
+        {expanded && drinksSummary && drinksSummary.length > 0 && (
+          <div className="mt-2 pt-2 border-t border-border/50">
+            <div className="flex flex-wrap gap-1">
+              {drinksSummary.map((drink, i) => (
+                <Badge key={i} variant="outline" className="text-[9px] sm:text-[10px] font-normal">
+                  {drink}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

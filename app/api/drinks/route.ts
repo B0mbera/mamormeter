@@ -4,7 +4,6 @@ import { CreateDrinkPayload, Drink } from "@/types";
 import {
   COOLDOWN_SECONDS,
   MAX_ML_PER_DRINK,
-  MIN_ML_PER_DRINK,
   MAX_ALCOHOL_PCT,
 } from "@/lib/constants";
 
@@ -24,10 +23,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (body.ml < MIN_ML_PER_DRINK || body.ml > MAX_ML_PER_DRINK) {
+    if (body.ml < 0 || body.ml > MAX_ML_PER_DRINK) {
       return NextResponse.json(
         {
-          error: `Amount must be ${MIN_ML_PER_DRINK}-${MAX_ML_PER_DRINK} ml`,
+          error: `Amount must be 0-${MAX_ML_PER_DRINK} ml`,
         },
         { status: 400 }
       );
@@ -77,6 +76,7 @@ export async function POST(request: NextRequest) {
         name: body.name.trim().slice(0, 50),
         ml: Math.round(body.ml),
         alcoholPct: Math.round(body.alcoholPct * 10) / 10,
+        ...(body.consumedAt ? { consumedAt: new Date(body.consumedAt) } : {}),
       },
     });
 
