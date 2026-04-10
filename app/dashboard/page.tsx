@@ -13,12 +13,12 @@ import { PromilleChart } from "@/components/PromilleChart";
 import { UniversityBadge } from "@/components/UniversityBadge";
 import { User, Drink, PromilleResult, ChartDataPoint } from "@/types";
 import { calculatePromille } from "@/lib/widmark";
-import { isMedikus } from "@/lib/constants";
+import { isMedikus, getUniversity } from "@/lib/constants";
 
 export default function DashboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
-  const { t } = useLanguageStore();
+  const { locale, t } = useLanguageStore();
 
   const [user, setUser] = useState<User | null>(null);
   const [drinks, setDrinks] = useState<Drink[]>([]);
@@ -81,7 +81,7 @@ export default function DashboardPage() {
           );
 
           points.push({
-            time: new Date(drink.consumedAt).toLocaleTimeString("hu-HU", {
+            time: new Date(drink.consumedAt).toLocaleTimeString(locale === "en" ? "en-GB" : "hu-HU", {
               hour: "2-digit",
               minute: "2-digit",
             }),
@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
         // Add current time point
         points.push({
-          time: new Date().toLocaleTimeString("hu-HU", {
+          time: new Date().toLocaleTimeString(locale === "en" ? "en-GB" : "hu-HU", {
             hour: "2-digit",
             minute: "2-digit",
           }),
@@ -107,7 +107,7 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [userId, router]);
+  }, [userId, router, locale]);
 
   useEffect(() => {
     if (!userId) {
@@ -146,7 +146,11 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{user.emoji}</span>
+            {isMedikus() && user.university ? (
+              <UniversityBadge universityId={user.university} size="lg" showName={false} />
+            ) : (
+              <span className="text-2xl">{user.emoji}</span>
+            )}
             <div>
               <h1 className="text-sm sm:text-base font-bold">{user.name}</h1>
               {isMedikus() && user.university && (

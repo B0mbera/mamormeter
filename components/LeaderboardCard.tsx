@@ -55,12 +55,9 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             </div>
             <div className="flex items-center gap-1.5 mt-0.5">
               {uni && (
-                <div className="flex items-center gap-1">
-                  <Image src={uni.logo} alt={uni.id} width={14} height={14} className="rounded-sm" />
-                  <span className="text-[10px] font-medium" style={{ color: uni.color }}>
-                    {uni.id}
-                  </span>
-                </div>
+                <span className="text-[10px] font-medium" style={{ color: uni.color }}>
+                  {uni.id}
+                </span>
               )}
               <p className="text-[10px] sm:text-xs text-muted-foreground">
                 {mode === "alltime"
