@@ -13,12 +13,12 @@ import { PromilleChart } from "@/components/PromilleChart";
 import { UniversityBadge } from "@/components/UniversityBadge";
 import { User, Drink, PromilleResult, ChartDataPoint } from "@/types";
 import { calculatePromille } from "@/lib/widmark";
-import { isMedikus, getUniversity } from "@/lib/constants";
+import { isMedikus } from "@/lib/constants";
 
 export default function DashboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
-  const { locale, t } = useLanguageStore();
+  const { locale } = useLanguageStore();
 
   const [user, setUser] = useState<User | null>(null);
   const [drinks, setDrinks] = useState<Drink[]>([]);

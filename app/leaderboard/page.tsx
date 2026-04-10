@@ -17,7 +17,7 @@ import Image from "next/image";
 export default function LeaderboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
-  const { locale, t } = useLanguageStore();
+  const { t } = useLanguageStore();
 
   const [period, setPeriod] = useState<"24h" | "alltime">("24h");
   const [uniFilter, setUniFilter] = useState<string | null>(null);

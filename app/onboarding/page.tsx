@@ -17,7 +17,7 @@ import Image from "next/image";
 export default function OnboardingPage() {
   const router = useRouter();
   const setUserId = useUserStore((s) => s.setUserId);
-  const { locale, t } = useLanguageStore();
+  const { t } = useLanguageStore();
 
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(70);
