@@ -12,6 +12,7 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UNIVERSITIES } from "@/lib/constants";
+import { containsProfanity } from "@/lib/profanity";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -33,6 +34,10 @@ export default function OnboardingPage() {
     }
     if (name.trim().length > 20) {
       toast.error(t("validation.nameTooLong"));
+      return;
+    }
+    if (containsProfanity(name)) {
+      toast.error(t("validation.nameProfanity"));
       return;
     }
     if (!university) {

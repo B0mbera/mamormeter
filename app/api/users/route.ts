@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CreateUserPayload } from "@/types";
+import { containsProfanity } from "@/lib/profanity";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +18,13 @@ export async function POST(request: NextRequest) {
     if (trimmedName.length === 0) {
       return NextResponse.json(
         { error: "Name is required" },
+        { status: 400 }
+      );
+    }
+
+    if (containsProfanity(trimmedName)) {
+      return NextResponse.json(
+        { error: "Choose a nicer nickname" },
         { status: 400 }
       );
     }

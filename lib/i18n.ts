@@ -68,7 +68,7 @@ const translations = {
     "support.subtitle": "Ha tetszik az app, támogasd a fejlesztést! 🍺",
     "support.description": "Egy sörre a fejlesztőnek",
     "support.button": "Támogatás Revoluttal",
-    "support.thanks": "Köszönjük a támogatást! 🙏",
+    "support.thanks": "Köszönöm a támogatást! 🙏",
 
     "toast.drinkAdded": "{name} hozzáadva!",
     "toast.drinkDeleted": "{name} törölve",
@@ -83,6 +83,7 @@ const translations = {
     "validation.weightInvalid": "Testsúly 30-250 kg között legyen!",
     "validation.uniRequired": "Válassz egyetemet!",
     "validation.drinkNameRequired": "Add meg az ital nevét!",
+    "validation.nameProfanity": "Válassz egy szebb becenevet!",
   },
   en: {
     "app.title": "MámorMéter",
@@ -151,7 +152,7 @@ const translations = {
     "support.subtitle": "If you like the app, support the development! 🍺",
     "support.description": "Buy the developer a beer",
     "support.button": "Support via Revolut",
-    "support.thanks": "Thank you for your support! 🙏",
+    "support.thanks": "Thanks for your support! 🙏",
 
     "toast.drinkAdded": "{name} added!",
     "toast.drinkDeleted": "{name} deleted",
@@ -166,6 +167,7 @@ const translations = {
     "validation.weightInvalid": "Weight must be between 30-250 kg!",
     "validation.uniRequired": "Select a university!",
     "validation.drinkNameRequired": "Enter the drink name!",
+    "validation.nameProfanity": "Please choose a nicer nickname!",
   },
 } as const;
 
