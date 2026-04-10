@@ -20,15 +20,15 @@ Valós idejű promille tracker az **53. Medikus Kupára** (Pécs, 2026. április
 
 ## Tech Stack
 
-| Réteg | Technológia |
-|-------|-------------|
-| **Framework** | Next.js 14 (App Router, TypeScript) |
-| **UI** | Tailwind CSS + shadcn/ui |
-| **Grafikonok** | Recharts |
-| **State** | Zustand (persist middleware) |
-| **Adatbázis** | PostgreSQL (Neon.tech, serverless) |
-| **ORM** | Prisma 5 |
-| **Hosting** | Vercel |
+| Réteg               | Technológia                          |
+| ------------------- | ------------------------------------ |
+| **Framework**       | Next.js 14 (App Router, TypeScript)  |
+| **UI**              | Tailwind CSS + shadcn/ui             |
+| **Grafikonok**      | Recharts                             |
+| **State**           | Zustand (persist middleware)         |
+| **Adatbázis**       | PostgreSQL (Neon.tech, serverless)   |
+| **ORM**             | Prisma 5                             |
+| **Hosting**         | Vercel                               |
 | **Dinamikus képek** | next/og ImageResponse (Edge Runtime) |
 
 ## Projekt struktúra
