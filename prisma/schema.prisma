@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(cuid())
+  name       String
+  weightKg   Float
+  gender     String
+  emoji      String
+  university String?
+  createdAt  DateTime @default(now())
+  drinks     Drink[]
+}
+
+model Drink {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  ml         Int
+  alcoholPct Float
+  consumedAt DateTime @default(now())
+}
+
+model DrinkPreset {
+  id         String @id @default(cuid())
+  name       String
+  nameEn     String @default("")
+  ml         Int
+  alcoholPct Float
+  category   String
+  categoryEn String @default("")
+  emoji      String
+}
