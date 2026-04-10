@@ -6,29 +6,29 @@ async function main() {
   await prisma.drinkPreset.deleteMany();
 
   const presets = [
-    { name: "Dobozos sör", nameEn: "Canned beer", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Prémium sör", nameEn: "Premium beer", ml: 500, alcoholPct: 5.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Craft IPA", nameEn: "Craft IPA", ml: 330, alcoholPct: 6.5, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Guinness", nameEn: "Guinness", ml: 440, alcoholPct: 4.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Kapucinus", nameEn: "Kapucinus", ml: 500, alcoholPct: 5.4, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Jägermeister", nameEn: "Jägermeister", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Bumbu Rum", nameEn: "Bumbu Rum", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Jack Daniel's", nameEn: "Jack Daniel's", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Jameson", nameEn: "Jameson", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
+    // === Sörök (Pécsi sörök, 2dl és 4dl) ===
+    { name: "Pécsi Világos 2dl", nameEn: "Pécsi Lager 2dl", ml: 200, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Pécsi Világos 4dl", nameEn: "Pécsi Lager 4dl", ml: 400, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Pécsi Prémium 2dl", nameEn: "Pécsi Premium 2dl", ml: 200, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Pécsi Prémium 4dl", nameEn: "Pécsi Premium 4dl", ml: 400, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Szalonka 2dl", nameEn: "Szalonka 2dl", ml: 200, alcoholPct: 5.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Szalonka 4dl", nameEn: "Szalonka 4dl", ml: 400, alcoholPct: 5.2, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+
+    // === Tömény (Medikus Kupa klasszikusok) ===
+    { name: "Jägermeister", nameEn: "Jägermeister", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🦌" },
+    { name: "Bumbu Rum", nameEn: "Bumbu Rum", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🏝️" },
     { name: "Vodka", nameEn: "Vodka", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Tequila", nameEn: "Tequila", ml: 40, alcoholPct: 38, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Gin", nameEn: "Gin", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Pálinka", nameEn: "Pálinka", ml: 50, alcoholPct: 52, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Absinth", nameEn: "Absinthe", ml: 30, alcoholPct: 70, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
+    { name: "Tequila", nameEn: "Tequila", ml: 40, alcoholPct: 38, category: "Tömény", categoryEn: "Spirits", emoji: "🌵" },
+    { name: "Pálinka", nameEn: "Pálinka", ml: 40, alcoholPct: 48, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
     { name: "Unicum", nameEn: "Unicum", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },
-    { name: "Vörösbor", nameEn: "Red wine", ml: 150, alcoholPct: 13, category: "Bor", categoryEn: "Wine", emoji: "🍷" },
-    { name: "Pezsgő", nameEn: "Champagne", ml: 120, alcoholPct: 11, category: "Bor", categoryEn: "Wine", emoji: "🥂" },
-    { name: "Fehérbor", nameEn: "White wine", ml: 150, alcoholPct: 12, category: "Bor", categoryEn: "Wine", emoji: "🍾" },
-    { name: "Fröccs", nameEn: "Wine spritzer", ml: 200, alcoholPct: 6, category: "Bor", categoryEn: "Wine", emoji: "🍷" },
-    { name: "Mojito", nameEn: "Mojito", ml: 250, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "🍹" },
-    { name: "Long Island", nameEn: "Long Island", ml: 300, alcoholPct: 22, category: "Koktél", categoryEn: "Cocktails", emoji: "🍹" },
-    { name: "Gin Tonic", nameEn: "Gin & Tonic", ml: 250, alcoholPct: 10, category: "Koktél", categoryEn: "Cocktails", emoji: "🍹" },
-    { name: "Vodka-Red Bull", nameEn: "Vodka Red Bull", ml: 330, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "🍹" },
+
+    // === Bor ===
+    { name: "Fröccs", nameEn: "Wine Spritzer", ml: 200, alcoholPct: 6, category: "Bor", categoryEn: "Wine", emoji: "🍷" },
+    { name: "Bor", nameEn: "Wine", ml: 150, alcoholPct: 13, category: "Bor", categoryEn: "Wine", emoji: "🍷" },
+
+    // === Koktél / Long drink ===
+    { name: "Vodka-Red Bull", nameEn: "Vodka Red Bull", ml: 330, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "⚡" },
+    { name: "Jäger-Bomba", nameEn: "Jäger Bomb", ml: 330, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "💣" },
   ];
 
   for (const preset of presets) {

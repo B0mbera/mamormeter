@@ -18,9 +18,9 @@ interface QuickDrink {
 }
 
 const defaultQuickDrinks: QuickDrink[] = [
-  { emoji: "🍺", name: "Sör", nameEn: "Beer", ml: 500, alcoholPct: 5 },
-  { emoji: "🥃", name: "Shot", nameEn: "Shot", ml: 40, alcoholPct: 40 },
-  { emoji: "🍷", name: "Bor", nameEn: "Wine", ml: 150, alcoholPct: 13 },
+  { emoji: "🍺", name: "Pécsi 4dl", nameEn: "Pécsi 4dl", ml: 400, alcoholPct: 4.6 },
+  { emoji: "🦌", name: "Jäger", nameEn: "Jäger", ml: 40, alcoholPct: 35 },
+  { emoji: "🥃", name: "Vodka", nameEn: "Vodka", ml: 40, alcoholPct: 40 },
 ];
 
 interface QuickAddBarProps {

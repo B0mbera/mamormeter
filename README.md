@@ -28,11 +28,11 @@ Valós idejű alkoholfogyasztás követő — Real-time alcohol consumption trac
 
 ### Environment Variables
 
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string (Neon.tech) |
-| `DIRECT_URL` | Direct PostgreSQL URL (Neon.tech) |
-| `NEXT_PUBLIC_EDITION` | `base` vagy `medikus` |
+| Variable              | Description                              |
+| --------------------- | ---------------------------------------- |
+| `DATABASE_URL`        | PostgreSQL connection string (Neon.tech) |
+| `DIRECT_URL`          | Direct PostgreSQL URL (Neon.tech)        |
+| `NEXT_PUBLIC_EDITION` | `base` vagy `medikus`                    |
 
 ### Setup
 
