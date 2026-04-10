@@ -20,7 +20,7 @@ export function Navigation() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-t safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-t safe-area-bottom">
       <div className="max-w-md mx-auto flex items-center justify-around py-1.5 sm:py-2 px-1">
         {navItems.map((item) => {
           const isActive = pathname === item.href;

@@ -10,6 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { DrinkPresetGrid } from "@/components/DrinkPresetGrid";
 import { DrinkPreset, Drink } from "@/types";
@@ -123,7 +124,10 @@ export default function AddDrinkPage() {
             <Plus className="h-5 w-5 text-primary" />
             <h1 className="text-lg sm:text-xl font-bold">{t("add.title")}</h1>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
         </div>
 
         {/* Presets */}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { PromilleCard } from "@/components/PromilleCard";
 import { QuickAddBar } from "@/components/QuickAddBar";
@@ -158,7 +159,10 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <PromilleCard promille={promille} />

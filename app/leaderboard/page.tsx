@@ -1,21 +1,21 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
 import { LeaderboardEntry } from "@/types";
 import { UNIVERSITIES } from "@/lib/constants";
-import { Trophy } from "lucide-react";
+import { Trophy, ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function LeaderboardPage() {
-  const router = useRouter();
   const userId = useUserStore((s) => s.userId);
   const { t } = useLanguageStore();
 
@@ -43,12 +43,8 @@ export default function LeaderboardPage() {
   }, [period, uniFilter]);
 
   useEffect(() => {
-    if (!userId) {
-      router.replace("/onboarding");
-      return;
-    }
     fetchLeaderboard();
-  }, [userId, router, fetchLeaderboard]);
+  }, [fetchLeaderboard]);
 
   // Auto-refresh every 30s
   useEffect(() => {
@@ -57,17 +53,27 @@ export default function LeaderboardPage() {
   }, [fetchLeaderboard]);
 
   return (
-    <div className="pb-20 pt-3">
+    <div className={userId ? "pb-20 pt-3" : "pb-6 pt-3"}>
       <div className="max-w-md mx-auto px-3 sm:px-4 space-y-3 sm:space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
+            {!userId && (
+              <Link href="/">
+                <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              </Link>
+            )}
             <Trophy className="h-5 w-5 text-yellow-500" />
             <h1 className="text-lg sm:text-xl font-bold">
               {t("leaderboard.title")}
             </h1>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <p className="text-xs text-center text-violet-600 font-medium">
@@ -163,7 +169,7 @@ export default function LeaderboardPage() {
           </TabsContent>
         </Tabs>
       </div>
-      <Navigation />
+      {userId && <Navigation />}
     </div>
   );
 }

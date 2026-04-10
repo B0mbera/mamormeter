@@ -10,6 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { UNIVERSITIES } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
@@ -72,13 +73,14 @@ export default function OnboardingPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div className="w-full max-w-md space-y-4">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <ThemeToggle />
           <LanguageSwitcher />
         </div>
 
         <div className="text-center space-y-1">
           <h1 className="text-3xl sm:text-4xl font-bold">🍻 MámorMéter</h1>
-          <p className="text-sm font-bold text-violet-600">
+          <p className="text-sm font-bold text-violet-600 dark:text-violet-400">
             53. Medikus Kupa · Pécs 2026
           </p>
           <p className="text-[10px] text-muted-foreground">április 9–11.</p>

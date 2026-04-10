@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { Heart, ExternalLink, Coffee } from "lucide-react";
 
@@ -23,7 +24,10 @@ export default function SupportPage() {
               {t("support.title")}
             </h1>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
         </div>
 
         <Card>

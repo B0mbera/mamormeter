@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,10 +38,12 @@ export default function RootLayout({
   return (
     <html lang="hu" suppressHydrationWarning>
       <body className={inter.className}>
-        <main className="min-h-screen bg-gradient-to-b from-violet-50/50 to-white">
-          {children}
-        </main>
-        <Toaster />
+        <ThemeProvider>
+          <main className="min-h-screen bg-gradient-to-b from-violet-50/50 to-white dark:from-background dark:to-background">
+            {children}
+          </main>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
