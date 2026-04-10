@@ -43,12 +43,10 @@ export const MIN_ML_PER_DRINK = 10;
 export const MAX_ALCOHOL_PCT = 96;
 export const MAX_MULTIPLIER = 3;
 
-export const EDITION = (process.env.NEXT_PUBLIC_EDITION || "medikus") as
-  | "base"
-  | "medikus";
+export const EDITION = "medikus" as const;
 
 export function isMedikus(): boolean {
-  return EDITION === "medikus";
+  return true;
 }
 
 export function getUniversity(id: string | null | undefined) {

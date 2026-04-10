@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLanguageStore } from "@/store/useLanguageStore";
-import { isMedikus } from "@/lib/constants";
 import { Heart, ExternalLink, Coffee } from "lucide-react";
 
 const REVOLUT_LINK = "https://revolut.me/bencesmq9";
 
 export default function SupportPage() {
   const { t } = useLanguageStore();
-  const medikus = isMedikus();
 
   return (
     <div className="pb-20 pt-3">
@@ -56,11 +54,9 @@ export default function SupportPage() {
         <Card>
           <CardContent className="pt-5 space-y-2 text-center">
             <p className="text-sm font-semibold">🍻 MámorMéter</p>
-            {medikus && (
-              <p className="text-xs text-violet-600">
-                53. Medikus Kupa · Pécs 2026
-              </p>
-            )}
+            <p className="text-xs text-violet-600 font-medium">
+              53. Medikus Kupa · Pécs 2026
+            </p>
             <p className="text-xs text-muted-foreground">
               Made with ❤️ + 🍺
             </p>

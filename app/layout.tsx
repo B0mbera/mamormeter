@@ -6,13 +6,18 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MámorMéter",
-  description: "Valós idejű alkoholfogyasztás követő — Real-time alcohol consumption tracker",
+  title: "MámorMéter — 53. Medikus Kupa · Pécs 2026",
+  description: "Az 53. Medikus Kupa hivatalos promille trackere! 🍻 Kövesd az ivásod, versenyezz az egyetemed színeiben! Pécs, 2026. április 9-11.",
   manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],
+  },
+  openGraph: {
+    title: "MámorMéter — 53. Medikus Kupa",
+    description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
+    siteName: "MámorMéter",
   },
 };
 

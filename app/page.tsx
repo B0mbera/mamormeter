@@ -18,9 +18,10 @@ export default function HomePage() {
 
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <span className="text-4xl">🍻</span>
-        <p className="text-sm text-muted-foreground mt-2">MámorMéter</p>
+      <div className="text-center space-y-2">
+        <span className="text-5xl">🍻</span>
+        <p className="text-lg font-bold">MámorMéter</p>
+        <p className="text-xs text-violet-600 font-medium">53. Medikus Kupa · Pécs 2026</p>
       </div>
     </div>
   );

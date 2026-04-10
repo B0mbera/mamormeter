@@ -10,7 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { UNIVERSITIES, isMedikus } from "@/lib/constants";
+import { UNIVERSITIES } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
 
@@ -18,7 +18,6 @@ export default function OnboardingPage() {
   const router = useRouter();
   const setUserId = useUserStore((s) => s.setUserId);
   const { locale, t } = useLanguageStore();
-  const medikus = isMedikus();
 
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(70);
@@ -35,7 +34,7 @@ export default function OnboardingPage() {
       toast.error(t("validation.nameTooLong"));
       return;
     }
-    if (medikus && !university) {
+    if (!university) {
       toast.error(t("validation.uniRequired"));
       return;
     }
@@ -49,7 +48,7 @@ export default function OnboardingPage() {
           name: name.trim(),
           weightKg: weight,
           gender,
-          university: medikus ? university : null,
+          university,
         }),
       });
 
@@ -79,11 +78,10 @@ export default function OnboardingPage() {
 
         <div className="text-center space-y-1">
           <h1 className="text-3xl sm:text-4xl font-bold">🍻 MámorMéter</h1>
-          {medikus && (
-            <p className="text-sm font-medium text-violet-600">
-              53. Medikus Kupa · Pécs 2026
-            </p>
-          )}
+          <p className="text-sm font-bold text-violet-600">
+            53. Medikus Kupa · Pécs 2026
+          </p>
+          <p className="text-[10px] text-muted-foreground">április 9–11.</p>
           <p className="text-sm text-muted-foreground">{t("onboarding.subtitle")}</p>
         </div>
 
@@ -133,10 +131,9 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {/* University selector (Medikus Kupa only) */}
-            {medikus && (
-              <div className="space-y-2">
-                <Label>{t("onboarding.university")}</Label>
+            {/* University selector */}
+            <div className="space-y-2">
+              <Label>{t("onboarding.university")}</Label>
                 <div className="grid grid-cols-2 gap-2">
                   {UNIVERSITIES.map((uni) => (
                     <Button
@@ -163,7 +160,6 @@ export default function OnboardingPage() {
                   ))}
                 </div>
               </div>
-            )}
 
             <Button
               className="w-full h-12 text-base"

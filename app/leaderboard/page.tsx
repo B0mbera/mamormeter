@@ -10,7 +10,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
 import { LeaderboardEntry } from "@/types";
-import { UNIVERSITIES, isMedikus } from "@/lib/constants";
+import { UNIVERSITIES } from "@/lib/constants";
 import { Trophy } from "lucide-react";
 import Image from "next/image";
 
@@ -18,7 +18,6 @@ export default function LeaderboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
   const { locale, t } = useLanguageStore();
-  const medikus = isMedikus();
 
   const [period, setPeriod] = useState<"24h" | "alltime">("24h");
   const [uniFilter, setUniFilter] = useState<string | null>(null);
@@ -71,11 +70,9 @@ export default function LeaderboardPage() {
           <LanguageSwitcher />
         </div>
 
-        {medikus && (
-          <p className="text-xs text-center text-violet-600 font-medium">
-            53. Medikus Kupa · Pécs 2026
-          </p>
-        )}
+        <p className="text-xs text-center text-violet-600 font-medium">
+          53. Medikus Kupa · Pécs 2026
+        </p>
 
         {/* Period tabs */}
         <Tabs
@@ -88,9 +85,8 @@ export default function LeaderboardPage() {
             <TabsTrigger value="alltime">{t("leaderboard.alltime")}</TabsTrigger>
           </TabsList>
 
-          {/* University filter (Medikus only) */}
-          {medikus && (
-            <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
+          {/* University filter */}
+          <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
               <Button
                 size="sm"
                 variant={uniFilter === null ? "default" : "outline"}
@@ -123,7 +119,6 @@ export default function LeaderboardPage() {
                 </Button>
               ))}
             </div>
-          )}
 
           <TabsContent value="24h" className="space-y-2 mt-2">
             {loading ? (
