@@ -8,7 +8,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Trophy, UserPlus } from "lucide-react";
+import { Trophy, UserPlus, Wine, ChartLine, Medal, ClipboardList } from "lucide-react";
 
 export default function HomePage() {
   const router = useRouter();
@@ -46,6 +46,29 @@ export default function HomePage() {
           <p className="text-[10px] text-muted-foreground">április 9–11.</p>
         </div>
 
+        {/* How it works */}
+        <div className="text-left space-y-2 bg-card/60 dark:bg-card/40 rounded-xl p-4 border">
+          <h2 className="text-sm font-semibold text-center">{t("landing.what")}</h2>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li className="flex items-start gap-2">
+              <ClipboardList className="h-4 w-4 mt-0.5 text-violet-500 shrink-0" />
+              {t("landing.step1")}
+            </li>
+            <li className="flex items-start gap-2">
+              <Wine className="h-4 w-4 mt-0.5 text-violet-500 shrink-0" />
+              {t("landing.step2")}
+            </li>
+            <li className="flex items-start gap-2">
+              <ChartLine className="h-4 w-4 mt-0.5 text-violet-500 shrink-0" />
+              {t("landing.step3")}
+            </li>
+            <li className="flex items-start gap-2">
+              <Medal className="h-4 w-4 mt-0.5 text-violet-500 shrink-0" />
+              {t("landing.step4")}
+            </li>
+          </ul>
+        </div>
+
         <div className="space-y-3">
           <Link href="/onboarding" className="block">
             <Button className="w-full h-12 text-base gap-2" size="lg">
@@ -61,6 +84,10 @@ export default function HomePage() {
             </Button>
           </Link>
         </div>
+
+        <p className="text-[10px] text-muted-foreground text-center">
+          {t("landing.disclaimer")}
+        </p>
       </div>
     </div>
   );

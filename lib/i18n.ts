@@ -78,6 +78,13 @@ const translations = {
     "toast.cooldown": "Várj még {seconds} másodpercet!",
     "toast.redirecting": "Visszatérés a műszerfalra...",
 
+    "landing.what": "Mi ez?",
+    "landing.step1": "Készíts profilt (becenév, testsúly, egyetem)",
+    "landing.step2": "Loggold az italaidat egy kattintással",
+    "landing.step3": "Kövesd a promille szinted valós időben",
+    "landing.step4": "Nézd a ranglétrán ki iszik a legtöbbet",
+    "landing.disclaimer": "⚠️ Az app szórakoztatási célú, ne használd orvosi döntésekhez!",
+
     "validation.nameRequired": "Add meg a beceneved!",
     "validation.nameTooLong": "Becenév maximum 20 karakter!",
     "validation.weightInvalid": "Testsúly 30-250 kg között legyen!",
@@ -161,6 +168,13 @@ const translations = {
     "toast.profileCreated": "Profile created! 🎉",
     "toast.cooldown": "Wait {seconds} seconds!",
     "toast.redirecting": "Redirecting to dashboard...",
+
+    "landing.what": "What is this?",
+    "landing.step1": "Create a profile (nickname, weight, university)",
+    "landing.step2": "Log your drinks with one tap",
+    "landing.step3": "Track your BAC level in real time",
+    "landing.step4": "Check the leaderboard to see who drinks the most",
+    "landing.disclaimer": "⚠️ This app is for entertainment only, not medical advice!",
 
     "validation.nameRequired": "Enter your nickname!",
     "validation.nameTooLong": "Nickname max 20 characters!",
