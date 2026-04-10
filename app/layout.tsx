@@ -19,6 +19,13 @@ export const metadata: Metadata = {
     title: "MámorMéter — 53. Medikus Kupa",
     description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
     siteName: "MámorMéter",
+    type: "website",
+    locale: "hu_HU",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MámorMéter — 53. Medikus Kupa",
+    description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
   },
 };
 
