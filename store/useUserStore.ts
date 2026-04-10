@@ -18,9 +18,11 @@ function getCookie(name: string): string | null {
 interface UserState {
   userId: string | null;
   sessionId: string;
+  _hasHydrated: boolean;
   setUserId: (id: string) => void;
   clearUser: () => void;
   restoreFromCookie: () => void;
+  setHasHydrated: (value: boolean) => void;
 }
 
 export const useUserStore = create<UserState>()(
@@ -28,6 +30,8 @@ export const useUserStore = create<UserState>()(
     (set, get) => ({
       userId: null,
       sessionId: uuidv4(),
+      _hasHydrated: false,
+      setHasHydrated: (value: boolean) => set({ _hasHydrated: value }),
       setUserId: (id: string) => {
         set({ userId: id });
         setCookie("mamormeter-uid", id);
@@ -53,6 +57,9 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: "mamormeter-user",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

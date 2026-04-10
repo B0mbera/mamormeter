@@ -14,6 +14,7 @@ export default function HomePage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
   const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
+  const _hasHydrated = useUserStore((s) => s._hasHydrated);
   const { t } = useLanguageStore();
 
   useEffect(() => {
@@ -21,12 +22,12 @@ export default function HomePage() {
   }, [restoreFromCookie]);
 
   useEffect(() => {
-    if (userId) {
+    if (_hasHydrated && userId) {
       router.replace("/dashboard");
     }
-  }, [userId, router]);
+  }, [userId, router, _hasHydrated]);
 
-  if (userId) {
+  if (_hasHydrated && userId) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <span className="text-5xl">🍻</span>
