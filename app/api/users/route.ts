@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const body: CreateUserPayload = await request.json();
 
-    if (!body.name || !body.weightKg || !body.gender || !body.emoji) {
+    if (!body.name || !body.weightKg || !body.gender) {
       return NextResponse.json(
         { error: "All fields required" },
         { status: 400 }
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         name: trimmedName,
         weightKg: body.weightKg,
         gender: body.gender,
-        emoji: body.emoji,
+        emoji: body.emoji || "🍻",
         university,
       },
       include: { drinks: true },

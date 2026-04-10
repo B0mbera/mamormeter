@@ -13,7 +13,7 @@ interface DrinkLogProps {
 }
 
 export function DrinkLog({ drinks, onDrinkDeleted }: DrinkLogProps) {
-  const { t } = useLanguageStore();
+  const { locale, t } = useLanguageStore();
 
   async function deleteDrink(drinkId: string, drinkName: string) {
     try {
@@ -30,7 +30,7 @@ export function DrinkLog({ drinks, onDrinkDeleted }: DrinkLogProps) {
   }
 
   function formatTime(dateStr: string): string {
-    return new Date(dateStr).toLocaleTimeString("hu-HU", {
+    return new Date(dateStr).toLocaleTimeString(locale === "en" ? "en-GB" : "hu-HU", {
       hour: "2-digit",
       minute: "2-digit",
     });

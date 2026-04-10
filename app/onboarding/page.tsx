@@ -14,8 +14,6 @@ import { UNIVERSITIES, isMedikus } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
 
-const EMOJIS = ["😎", "🤪", "🍻", "🎉", "🔥", "😂", "🥳", "💀", "👑", "🦄"];
-
 export default function OnboardingPage() {
   const router = useRouter();
   const setUserId = useUserStore((s) => s.setUserId);
@@ -25,7 +23,6 @@ export default function OnboardingPage() {
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(70);
   const [gender, setGender] = useState<"male" | "female">("male");
-  const [emoji, setEmoji] = useState("🍻");
   const [university, setUniversity] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +49,6 @@ export default function OnboardingPage() {
           name: name.trim(),
           weightKg: weight,
           gender,
-          emoji,
           university: medikus ? university : null,
         }),
       });
@@ -134,25 +130,6 @@ export default function OnboardingPage() {
                 >
                   {t("onboarding.female")}
                 </Button>
-              </div>
-            </div>
-
-            {/* Emoji picker */}
-            <div className="space-y-2">
-              <Label>{t("onboarding.emoji")}</Label>
-              <div className="flex flex-wrap gap-1.5">
-                {EMOJIS.map((e) => (
-                  <Button
-                    key={e}
-                    type="button"
-                    variant={emoji === e ? "default" : "outline"}
-                    size="sm"
-                    className="h-9 w-9 text-lg p-0"
-                    onClick={() => setEmoji(e)}
-                  >
-                    {e}
-                  </Button>
-                ))}
               </div>
             </div>
 

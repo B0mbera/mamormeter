@@ -36,7 +36,13 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             {getRankDisplay(rank)}
           </div>
 
-          <div className="text-2xl sm:text-3xl shrink-0">{user.emoji}</div>
+          {uni ? (
+            <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
+              <Image src={uni.logo} alt={uni.id} width={28} height={28} className="rounded-sm object-contain" />
+            </div>
+          ) : (
+            <div className="text-2xl sm:text-3xl shrink-0">🍻</div>
+          )}
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">

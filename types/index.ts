@@ -74,7 +74,7 @@ export interface CreateUserPayload {
   name: string;
   weightKg: number;
   gender: "male" | "female";
-  emoji: string;
+  emoji?: string;
   university?: string | null;
 }
 

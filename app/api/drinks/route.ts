@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     if (
       !body.userId ||
-      !body.name ||
+      !body.name?.trim() ||
       !body.ml ||
       body.alcoholPct === undefined
     ) {

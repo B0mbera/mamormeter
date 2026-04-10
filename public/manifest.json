@@ -1,0 +1,16 @@
+{
+  "name": "MámorMéter",
+  "short_name": "MámorMéter",
+  "description": "Valós idejű alkoholfogyasztás követő",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

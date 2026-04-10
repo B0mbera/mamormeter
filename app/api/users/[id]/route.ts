@@ -5,11 +5,12 @@ import { UserWithPromille } from "@/types";
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         drinks: { orderBy: { consumedAt: "desc" } },
       },

@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   title: "MámorMéter",
   description: "Valós idejű alkoholfogyasztás követő — Real-time alcohol consumption tracker",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
