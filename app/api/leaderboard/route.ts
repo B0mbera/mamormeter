@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
         user: {
           id: user.id,
           name: user.name,
-          weightKg: 0,
+          weightKg: user.weightKg,
           gender: user.gender as "male" | "female",
           emoji: user.emoji,
           university: user.university,
