@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ApiResponse } from "@/types";
 
 export async function DELETE(
   _request: NextRequest,
@@ -12,21 +11,18 @@ export async function DELETE(
     });
 
     if (!drink) {
-      return NextResponse.json<ApiResponse<null>>(
-        { success: false, error: "Drink not found" },
+      return NextResponse.json(
+        { error: "Drink not found" },
         { status: 404 }
       );
     }
 
     await prisma.drink.delete({ where: { id: params.id } });
 
-    return NextResponse.json<ApiResponse<{ id: string }>>({
-      success: true,
-      data: { id: params.id },
-    });
+    return NextResponse.json({ id: params.id });
   } catch {
-    return NextResponse.json<ApiResponse<null>>(
-      { success: false, error: "Server error" },
+    return NextResponse.json(
+      { error: "Server error" },
       { status: 500 }
     );
   }

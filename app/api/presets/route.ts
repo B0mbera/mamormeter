@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ApiResponse, DrinkPreset } from "@/types";
+import { DrinkPreset } from "@/types";
 
 export async function GET() {
   try {
@@ -19,13 +19,10 @@ export async function GET() {
       emoji: p.emoji,
     }));
 
-    return NextResponse.json<ApiResponse<DrinkPreset[]>>({
-      success: true,
-      data: response,
-    });
+    return NextResponse.json(response);
   } catch {
-    return NextResponse.json<ApiResponse<null>>(
-      { success: false, error: "Server error" },
+    return NextResponse.json(
+      { error: "Server error" },
       { status: 500 }
     );
   }

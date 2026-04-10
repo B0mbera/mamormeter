@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { calculatePromille, calculateTotalAlcoholGrams } from "@/lib/widmark";
-import { ApiResponse, LeaderboardEntry } from "@/types";
+import { LeaderboardEntry } from "@/types";
 
 export async function GET(request: NextRequest) {
   try {
@@ -68,25 +68,26 @@ export async function GET(request: NextRequest) {
       };
     });
 
+    // Filter out users with no activity for the selected period
+    let filtered: LeaderboardEntry[];
     if (period === "alltime") {
-      entries.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
+      filtered = entries.filter((e) => e.totalAlcoholGrams > 0);
+      filtered.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
     } else {
-      entries.sort(
+      filtered = entries.filter((e) => e.promille.currentPromille > 0 || e.user.drinks.length > 0);
+      filtered.sort(
         (a, b) => b.promille.currentPromille - a.promille.currentPromille
       );
     }
 
-    entries.forEach((entry, index) => {
+    filtered.forEach((entry, index) => {
       entry.rank = index + 1;
     });
 
-    return NextResponse.json<ApiResponse<LeaderboardEntry[]>>({
-      success: true,
-      data: entries,
-    });
+    return NextResponse.json(filtered);
   } catch {
-    return NextResponse.json<ApiResponse<null>>(
-      { success: false, error: "Server error" },
+    return NextResponse.json(
+      { error: "Server error" },
       { status: 500 }
     );
   }

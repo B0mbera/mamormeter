@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ApiResponse, CreateDrinkPayload, Drink } from "@/types";
+import { CreateDrinkPayload, Drink } from "@/types";
 import {
   COOLDOWN_SECONDS,
   MAX_ML_PER_DRINK,
@@ -18,16 +18,15 @@ export async function POST(request: NextRequest) {
       !body.ml ||
       body.alcoholPct === undefined
     ) {
-      return NextResponse.json<ApiResponse<null>>(
-        { success: false, error: "All fields required" },
+      return NextResponse.json(
+        { error: "All fields required" },
         { status: 400 }
       );
     }
 
     if (body.ml < MIN_ML_PER_DRINK || body.ml > MAX_ML_PER_DRINK) {
-      return NextResponse.json<ApiResponse<null>>(
+      return NextResponse.json(
         {
-          success: false,
           error: `Amount must be ${MIN_ML_PER_DRINK}-${MAX_ML_PER_DRINK} ml`,
         },
         { status: 400 }
@@ -35,8 +34,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (body.alcoholPct < 0 || body.alcoholPct > MAX_ALCOHOL_PCT) {
-      return NextResponse.json<ApiResponse<null>>(
-        { success: false, error: `Alcohol must be 0-${MAX_ALCOHOL_PCT}%` },
+      return NextResponse.json(
+        { error: `Alcohol must be 0-${MAX_ALCOHOL_PCT}%` },
         { status: 400 }
       );
     }
@@ -46,8 +45,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!user) {
-      return NextResponse.json<ApiResponse<null>>(
-        { success: false, error: "User not found" },
+      return NextResponse.json(
+        { error: "User not found" },
         { status: 404 }
       );
     }
@@ -63,9 +62,8 @@ export async function POST(request: NextRequest) {
         (Date.now() - new Date(lastDrink.consumedAt).getTime()) / 1000;
       if (elapsed < COOLDOWN_SECONDS) {
         const remaining = Math.ceil(COOLDOWN_SECONDS - elapsed);
-        return NextResponse.json<ApiResponse<null>>(
+        return NextResponse.json(
           {
-            success: false,
             error: `Cooldown: wait ${remaining} seconds`,
           },
           { status: 429 }
@@ -91,13 +89,10 @@ export async function POST(request: NextRequest) {
       consumedAt: drink.consumedAt.toISOString(),
     };
 
-    return NextResponse.json<ApiResponse<Drink>>({
-      success: true,
-      data: drinkResponse,
-    });
+    return NextResponse.json(drinkResponse);
   } catch {
-    return NextResponse.json<ApiResponse<null>>(
-      { success: false, error: "Server error" },
+    return NextResponse.json(
+      { error: "Server error" },
       { status: 500 }
     );
   }

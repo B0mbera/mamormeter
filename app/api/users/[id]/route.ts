@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { calculatePromille, calculateTotalAlcoholGrams } from "@/lib/widmark";
-import { ApiResponse, UserWithPromille } from "@/types";
+import { calculatePromille } from "@/lib/widmark";
+import { UserWithPromille } from "@/types";
 
 export async function GET(
   _request: NextRequest,
@@ -16,8 +16,8 @@ export async function GET(
     });
 
     if (!user) {
-      return NextResponse.json<ApiResponse<null>>(
-        { success: false, error: "User not found" },
+      return NextResponse.json(
+        { error: "User not found" },
         { status: 404 }
       );
     }
@@ -58,13 +58,10 @@ export async function GET(
       promille,
     };
 
-    return NextResponse.json<ApiResponse<UserWithPromille>>({
-      success: true,
-      data: response,
-    });
+    return NextResponse.json(response);
   } catch {
-    return NextResponse.json<ApiResponse<null>>(
-      { success: false, error: "Server error" },
+    return NextResponse.json(
+      { error: "Server error" },
       { status: 500 }
     );
   }
