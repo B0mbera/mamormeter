@@ -13,7 +13,12 @@ import { Trophy, UserPlus, Wine, ChartLine, Medal, ClipboardList } from "lucide-
 export default function HomePage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
+  const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
   const { t } = useLanguageStore();
+
+  useEffect(() => {
+    restoreFromCookie();
+  }, [restoreFromCookie]);
 
   useEffect(() => {
     if (userId) {

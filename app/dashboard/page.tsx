@@ -19,6 +19,7 @@ import { isMedikus } from "@/lib/constants";
 export default function DashboardPage() {
   const router = useRouter();
   const userId = useUserStore((s) => s.userId);
+  const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
   const { locale } = useLanguageStore();
 
   const [user, setUser] = useState<User | null>(null);
@@ -26,6 +27,11 @@ export default function DashboardPage() {
   const [promille, setPromille] = useState<PromilleResult | null>(null);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Restore session from cookie on mount
+  useEffect(() => {
+    restoreFromCookie();
+  }, [restoreFromCookie]);
 
   const fetchData = useCallback(async () => {
     if (!userId) return;

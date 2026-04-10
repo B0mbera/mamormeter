@@ -26,6 +26,9 @@ async function main() {
     // === Koktél / Long drink ===
     { name: "Vodka-Red Bull", nameEn: "Vodka Red Bull", ml: 330, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "⚡" },
     { name: "Jäger-Bomba", nameEn: "Jäger Bomb", ml: 330, alcoholPct: 8, category: "Koktél", categoryEn: "Cocktails", emoji: "💣" },
+
+    // === Egyéb ===
+    { name: "Terea", nameEn: "Terea", ml: 0, alcoholPct: 0, category: "Egyéb", categoryEn: "Other", emoji: "🚬" },
   ];
 
   for (const preset of presets) {

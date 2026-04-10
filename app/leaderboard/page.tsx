@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
-import { LeaderboardEntry } from "@/types";
+import { LeaderboardEntry, UniversityScore } from "@/types";
 import { UNIVERSITIES } from "@/lib/constants";
 import { Trophy, ArrowLeft } from "lucide-react";
 import Image from "next/image";
@@ -17,15 +18,22 @@ import Link from "next/link";
 
 export default function LeaderboardPage() {
   const userId = useUserStore((s) => s.userId);
-  const { t } = useLanguageStore();
+  const restoreFromCookie = useUserStore((s) => s.restoreFromCookie);
+  const { locale, t } = useLanguageStore();
 
   const [period, setPeriod] = useState<"24h" | "alltime">("24h");
   const [uniFilter, setUniFilter] = useState<string | null>(null);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [uniScores, setUniScores] = useState<UniversityScore[]>([]);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const hasFetched = useRef(false);
+
+  // Restore session from cookie on mount
+  useEffect(() => {
+    restoreFromCookie();
+  }, [restoreFromCookie]);
 
   const fetchLeaderboard = useCallback(async () => {
-    setLoading(true);
     try {
       let url = `/api/leaderboard?period=${period}`;
       if (uniFilter) url += `&university=${uniFilter}`;
@@ -34,23 +42,40 @@ export default function LeaderboardPage() {
       if (!res.ok) return;
 
       const data = await res.json();
-      setEntries(data);
+      setEntries(data.entries || []);
+      setUniScores(data.universityScores || []);
     } catch {
       // ignore
     } finally {
-      setLoading(false);
+      if (!hasFetched.current) {
+        hasFetched.current = true;
+        setInitialLoading(false);
+      }
     }
   }, [period, uniFilter]);
 
   useEffect(() => {
+    hasFetched.current = false;
+    setInitialLoading(true);
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  // Auto-refresh every 30s
+  // Auto-refresh every 5 seconds
   useEffect(() => {
-    const interval = setInterval(fetchLeaderboard, 30000);
+    const interval = setInterval(fetchLeaderboard, 5000);
     return () => clearInterval(interval);
   }, [fetchLeaderboard]);
+
+  function getRankEmoji(rank: number): string {
+    if (rank === 1) return "🥇";
+    if (rank === 2) return "🥈";
+    if (rank === 3) return "🥉";
+    return `${rank}.`;
+  }
+
+  const uniScoreLabel = period === "alltime"
+    ? (locale === "hu" ? "Össz. standard ital" : "Total standard drinks")
+    : (locale === "hu" ? "Össz. promille" : "Total promille");
 
   return (
     <div className={userId ? "pb-20 pt-3" : "pb-6 pt-3"}>
@@ -79,6 +104,40 @@ export default function LeaderboardPage() {
         <p className="text-xs text-center text-violet-600 font-medium">
           53. Medikus Kupa · Pécs 2026
         </p>
+
+        {/* University combined scores */}
+        {!uniFilter && uniScores.length > 0 && (
+          <Card>
+            <CardContent className="pt-3 pb-3">
+              <p className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
+                {locale === "hu" ? "Egyetemi rangsor" : "University ranking"}
+              </p>
+              <div className="space-y-1.5">
+                {uniScores.map((u) => (
+                  <div key={u.universityId} className="flex items-center gap-2">
+                    <span className="text-sm font-bold w-6 text-center">{getRankEmoji(u.rank)}</span>
+                    <Image src={u.logo} alt={u.universityId} width={20} height={20} className="rounded-sm" />
+                    <span className="text-xs font-medium flex-1" style={{ color: u.color }}>
+                      {u.universityId}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {u.memberCount} {locale === "hu" ? "fő" : "members"}
+                    </span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: u.color }}>
+                      {period === "alltime"
+                        ? Math.round((u.totalAlcoholGrams / 10) * 10) / 10
+                        : u.totalPromille.toFixed(2)}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {period === "alltime" ? (locale === "hu" ? "std" : "std") : "‰"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1.5 text-center">{uniScoreLabel}</p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Period tabs */}
         <Tabs
@@ -127,7 +186,7 @@ export default function LeaderboardPage() {
             </div>
 
           <TabsContent value="24h" className="space-y-2 mt-2">
-            {loading ? (
+            {initialLoading ? (
               <p className="text-center text-sm text-muted-foreground py-8">
                 ⏳
               </p>
@@ -148,7 +207,7 @@ export default function LeaderboardPage() {
           </TabsContent>
 
           <TabsContent value="alltime" className="space-y-2 mt-2">
-            {loading ? (
+            {initialLoading ? (
               <p className="text-center text-sm text-muted-foreground py-8">
                 ⏳
               </p>
