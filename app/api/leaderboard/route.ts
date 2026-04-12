@@ -7,8 +7,8 @@ import { getCached, setCached } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
 
-const LEADERBOARD_LIMIT = 200;
-const CACHE_TTL = 3000; // 3 seconds in-memory
+const LEADERBOARD_LIMIT = 50;
+const CACHE_TTL = 5000; // 5 seconds in-memory
 
 export async function GET(request: NextRequest) {
   try {
@@ -134,26 +134,45 @@ export async function GET(request: NextRequest) {
       entry.rank = index + 1;
     });
 
-    // Build party combined scores from ALL matching entries (not just limited)
+    // Build party scores using lightweight aggregation
+    // Count members per party (only those with drinks in period)
+    const memberCounts = await prisma.user.groupBy({
+      by: ["university"],
+      where: {
+        university: { not: null },
+        drinks: {
+          some: period === "alltime" ? {} : { consumedAt: { gte: twentyFourHoursAgo } },
+        },
+      },
+      _count: { id: true },
+    });
+
+    const memberCountMap = new Map(
+      memberCounts.map((m) => [m.university, m._count.id])
+    );
+
+    // For party promille totals, use the already-computed entries (all of them, not just limited)
+    const partyTotals = new Map<string, { promille: number; grams: number }>();
+    for (const e of entries) {
+      const pid = e.user.university;
+      if (!pid) continue;
+      const prev = partyTotals.get(pid) || { promille: 0, grams: 0 };
+      prev.promille += e.promille.currentPromille;
+      prev.grams += e.totalAlcoholGrams;
+      partyTotals.set(pid, prev);
+    }
+
     const partyScores: PartyScore[] = PARTIES.map((party) => {
-      const partyEntries = entries.filter((e) => e.user.university === party.id);
-      const totalPromille = partyEntries.reduce(
-        (sum, e) => sum + e.promille.currentPromille,
-        0
-      );
-      const totalAlcoholGrams = partyEntries.reduce(
-        (sum, e) => sum + e.totalAlcoholGrams,
-        0
-      );
+      const totals = partyTotals.get(party.id) || { promille: 0, grams: 0 };
       return {
         partyId: party.id,
         name: party.name,
         nameEn: party.nameEn,
         color: party.color,
         emoji: party.emoji,
-        totalPromille: Math.round(totalPromille * 100) / 100,
-        totalAlcoholGrams: Math.round(totalAlcoholGrams * 10) / 10,
-        memberCount: partyEntries.length,
+        totalPromille: Math.round(totals.promille * 100) / 100,
+        totalAlcoholGrams: Math.round(totals.grams * 10) / 10,
+        memberCount: memberCountMap.get(party.id) || 0,
         rank: 0,
       };
     });
