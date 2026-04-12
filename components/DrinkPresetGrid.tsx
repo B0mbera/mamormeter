@@ -92,6 +92,11 @@ export function DrinkPresetGrid({
         return;
       }
 
+      if (res.status === 422) {
+        toast.error(t("bac.limitReached"));
+        return;
+      }
+
       if (!res.ok) {
         toast.error(data.error || t("toast.error"));
         return;

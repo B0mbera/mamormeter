@@ -34,7 +34,9 @@ export type PromilleStatus =
   | "happy"
   | "moderate"
   | "drunk"
-  | "very-drunk";
+  | "very-drunk"
+  | "dangerous"
+  | "lethal";
 
 export interface PromilleResult {
   currentPromille: number;

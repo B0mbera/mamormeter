@@ -5,8 +5,10 @@ import {
   COOLDOWN_SECONDS,
   MAX_ML_PER_DRINK,
   MAX_ALCOHOL_PCT,
+  MAX_BAC_PROMILLE,
 } from "@/lib/constants";
 import { invalidateCache } from "@/lib/cache";
+import { calculateAlcoholGrams, getWidmarkFactor } from "@/lib/widmark";
 
 export async function POST(request: NextRequest) {
   try {
@@ -45,10 +47,12 @@ export async function POST(request: NextRequest) {
       where: { id: body.userId },
       select: {
         id: true,
+        weightKg: true,
+        gender: true,
         drinks: {
+          where: { consumedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
           orderBy: { consumedAt: "desc" },
-          take: 1,
-          select: { consumedAt: true },
+          select: { ml: true, alcoholPct: true, consumedAt: true },
         },
       },
     });
@@ -73,6 +77,25 @@ export async function POST(request: NextRequest) {
           { status: 429 }
         );
       }
+    }
+
+    // BAC limit check — reject if adding this drink would push above safety cap
+    const existingDrinks = user.drinks.map((d) => ({
+      ml: d.ml,
+      alcoholPct: d.alcoholPct,
+      consumedAt: d.consumedAt,
+    }));
+    const newDrinkGrams = calculateAlcoholGrams(body.ml, body.alcoholPct);
+    const existingGrams = existingDrinks.reduce(
+      (sum, d) => sum + calculateAlcoholGrams(d.ml, d.alcoholPct), 0
+    );
+    const r = getWidmarkFactor(user.gender as "male" | "female");
+    const projectedMax = (existingGrams + newDrinkGrams) / (user.weightKg * r);
+    if (projectedMax > MAX_BAC_PROMILLE) {
+      return NextResponse.json(
+        { error: "BAC limit reached", code: "BAC_LIMIT" },
+        { status: 422 }
+      );
     }
 
     const drink = await prisma.drink.create({

@@ -74,7 +74,9 @@ export function getPromilleStatus(promille: number): {
   if (promille < 0.8) return { status: "happy", statusColor: "#eab308" };
   if (promille < 1.5) return { status: "moderate", statusColor: "#f97316" };
   if (promille < 2.5) return { status: "drunk", statusColor: "#ef4444" };
-  return { status: "very-drunk", statusColor: "#a855f7" };
+  if (promille < 3.5) return { status: "very-drunk", statusColor: "#a855f7" };
+  if (promille < 5.0) return { status: "dangerous", statusColor: "#dc2626" };
+  return { status: "lethal", statusColor: "#000000" };
 }
 
 export function calculateTotalAlcoholGrams(drinks: DrinkInput[]): number {

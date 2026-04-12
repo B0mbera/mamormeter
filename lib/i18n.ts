@@ -39,6 +39,12 @@ const translations = {
     "status.moderate": "Közepes",
     "status.drunk": "Részeg",
     "status.very-drunk": "Nagyon részeg",
+    "status.dangerous": "Életveszély!",
+    "status.lethal": "Klinikai halál zóna!",
+
+    "bac.dangerWarning": "⚠️ 3.5‰ felett életveszély! Kérj segítséget! 112",
+    "bac.lethalWarning": "☠️ 5‰ felett klinikai halál! Azonnal hívj mentőt! 112",
+    "bac.limitReached": "Elérted a biztonsági limitet (6‰). Nem adhatsz hozzá több italt.",
 
     "sobering.sober": "Józan vagy!",
     "sobering.time": "Kb. {hours} óra {minutes} perc múlva leszel józan",
@@ -141,6 +147,12 @@ const translations = {
     "status.moderate": "Moderate",
     "status.drunk": "Drunk",
     "status.very-drunk": "Very drunk",
+    "status.dangerous": "Life danger!",
+    "status.lethal": "Clinical death zone!",
+
+    "bac.dangerWarning": "⚠️ Above 3.5‰ is life-threatening! Get help! Call 112",
+    "bac.lethalWarning": "☠️ Above 5‰ is clinical death! Call an ambulance! 112",
+    "bac.limitReached": "You've reached the safety limit (6‰). Cannot add more drinks.",
 
     "sobering.sober": "You're sober!",
     "sobering.time": "About {hours}h {minutes}m until sober",
