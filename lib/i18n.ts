@@ -67,10 +67,10 @@ const translations = {
     "leaderboard.soberIn": "{hours} ó {minutes} p múlva józan",
 
     "support.title": "Támogatás",
-    "support.subtitle": "Ha tetszik az app, támogasd a fejlesztést! 🍺",
-    "support.description": "Egy sörre a fejlesztőnek",
+    "support.subtitle": "Az app üzemeltetése pénzbe kerül! 💸",
+    "support.description": "A szerver és adatbázis fenntartása havi költséggel jár. Ha használod és tetszik az app, kérlek támogasd az üzemeltetést — már egy sör ára is sokat segít!",
     "support.button": "Támogatás Revoluttal",
-    "support.thanks": "Köszönöm a támogatást! 🙏",
+    "support.thanks": "Köszönjük, hogy segítesz fenntartani az appot! 🙏",
 
     "toast.drinkAdded": "{name} hozzáadva!",
     "toast.drinkDeleted": "{name} törölve",
@@ -160,10 +160,10 @@ const translations = {
     "leaderboard.soberIn": "{hours}h {minutes}m until sober",
 
     "support.title": "Support",
-    "support.subtitle": "If you like the app, support the development! 🍺",
-    "support.description": "Buy the developer a beer",
+    "support.subtitle": "Running this app costs money! 💸",
+    "support.description": "Server and database hosting has a monthly cost. If you use and enjoy the app, please support us — even the price of a beer helps a lot!",
     "support.button": "Support via Revolut",
-    "support.thanks": "Thanks for your support! 🙏",
+    "support.thanks": "Thanks for helping keep the app running! 🙏",
 
     "toast.drinkAdded": "{name} added!",
     "toast.drinkDeleted": "{name} deleted",

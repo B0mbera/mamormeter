@@ -33,9 +33,9 @@ export default function SupportPage() {
         <Card>
           <CardContent className="pt-6 space-y-4">
             <div className="text-center space-y-2">
-              <span className="text-5xl">☕</span>
+              <span className="text-5xl">💸</span>
               <h2 className="text-lg font-bold">{t("support.subtitle")}</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 {t("support.description")}
               </p>
             </div>
