@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { invalidateCache } from "@/lib/cache";
 
 export async function DELETE(
   _request: NextRequest,
@@ -19,6 +20,9 @@ export async function DELETE(
     }
 
     await prisma.drink.delete({ where: { id } });
+
+    // Invalidate leaderboard cache after drink deletion
+    invalidateCache("lb:");
 
     return NextResponse.json({ id });
   } catch {

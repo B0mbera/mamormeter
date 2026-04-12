@@ -3,16 +3,28 @@ import { prisma } from "@/lib/prisma";
 import { calculatePromille, calculateTotalAlcoholGrams } from "@/lib/widmark";
 import { LeaderboardEntry, PartyScore } from "@/types";
 import { PARTIES } from "@/lib/constants";
+import { getCached, setCached } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
 
 const LEADERBOARD_LIMIT = 200;
+const CACHE_TTL = 3000; // 3 seconds in-memory
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get("period") || "24h";
     const university = searchParams.get("university") || null;
+
+    const cacheKey = `lb:${period}:${university || "all"}`;
+    const cached = getCached<{ entries: LeaderboardEntry[]; partyScores: PartyScore[] }>(cacheKey);
+    if (cached) {
+      return NextResponse.json(cached, {
+        headers: {
+          "Cache-Control": "public, s-maxage=5, stale-while-revalidate=15",
+        },
+      });
+    }
 
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
@@ -39,8 +51,6 @@ export async function GET(request: NextRequest) {
           where: period === "alltime" ? {} : { consumedAt: { gte: twentyFourHoursAgo } },
           orderBy: { consumedAt: "desc" },
           select: {
-            id: true,
-            userId: true,
             name: true,
             ml: true,
             alcoholPct: true,
@@ -101,14 +111,7 @@ export async function GET(request: NextRequest) {
           emoji: user.emoji,
           university: user.university,
           createdAt: user.createdAt.toISOString(),
-          drinks: user.drinks.map((d) => ({
-            id: d.id,
-            userId: d.userId,
-            name: d.name,
-            ml: d.ml,
-            alcoholPct: d.alcoholPct,
-            consumedAt: d.consumedAt.toISOString(),
-          })),
+          drinks: [],
         },
         promille,
         totalAlcoholGrams: Math.round(totalAlcoholGrams * 10) / 10,
@@ -164,9 +167,12 @@ export async function GET(request: NextRequest) {
       p.rank = i + 1;
     });
 
-    return NextResponse.json({ entries: limited, partyScores }, {
+    const result = { entries: limited, partyScores };
+    setCached(cacheKey, result, CACHE_TTL);
+
+    return NextResponse.json(result, {
       headers: {
-        "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
+        "Cache-Control": "public, s-maxage=5, stale-while-revalidate=15",
       },
     });
   } catch {

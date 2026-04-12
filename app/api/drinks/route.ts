@@ -6,6 +6,7 @@ import {
   MAX_ML_PER_DRINK,
   MAX_ALCOHOL_PCT,
 } from "@/lib/constants";
+import { invalidateCache } from "@/lib/cache";
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,8 +40,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Combined user lookup + cooldown check in one query
     const user = await prisma.user.findUnique({
       where: { id: body.userId },
+      select: {
+        id: true,
+        drinks: {
+          orderBy: { consumedAt: "desc" },
+          take: 1,
+          select: { consumedAt: true },
+        },
+      },
     });
 
     if (!user) {
@@ -50,15 +60,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Cooldown check: last drink must be > COOLDOWN_SECONDS ago
-    const lastDrink = await prisma.drink.findFirst({
-      where: { userId: body.userId },
-      orderBy: { consumedAt: "desc" },
-    });
-
-    if (lastDrink) {
+    // Cooldown check
+    if (user.drinks.length > 0) {
       const elapsed =
-        (Date.now() - new Date(lastDrink.consumedAt).getTime()) / 1000;
+        (Date.now() - new Date(user.drinks[0].consumedAt).getTime()) / 1000;
       if (elapsed < COOLDOWN_SECONDS) {
         const remaining = Math.ceil(COOLDOWN_SECONDS - elapsed);
         return NextResponse.json(
@@ -79,6 +84,9 @@ export async function POST(request: NextRequest) {
         ...(body.consumedAt ? { consumedAt: new Date(body.consumedAt) } : {}),
       },
     });
+
+    // Invalidate leaderboard cache after new drink
+    invalidateCache("lb:");
 
     const drinkResponse: Drink = {
       id: drink.id,

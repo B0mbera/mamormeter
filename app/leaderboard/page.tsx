@@ -59,9 +59,9 @@ export default function LeaderboardPage() {
     fetchLeaderboard();
   }, [fetchLeaderboard]);
 
-  // Auto-refresh every 5 seconds
+  // Auto-refresh every 10 seconds (CDN serves cached response within TTL)
   useEffect(() => {
-    const interval = setInterval(fetchLeaderboard, 5000);
+    const interval = setInterval(fetchLeaderboard, 10000);
     return () => clearInterval(interval);
   }, [fetchLeaderboard]);
 
