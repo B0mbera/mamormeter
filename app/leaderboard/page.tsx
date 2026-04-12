@@ -74,7 +74,7 @@ export default function LeaderboardPage() {
 
   const partyScoreLabel = period === "alltime"
     ? (locale === "hu" ? "Össz. standard ital" : "Total standard drinks")
-    : (locale === "hu" ? "Össz. promille" : "Total promille");
+    : (locale === "hu" ? "Össz. ezrelék (‰)" : "Total BAC (‰)");
 
   return (
     <div className={userId ? "pb-20 pt-3" : "pb-6 pt-3"}>

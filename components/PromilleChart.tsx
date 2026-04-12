@@ -71,7 +71,7 @@ export function PromilleChart({ data }: PromilleChartProps) {
                   boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
                   fontSize: 11,
                 }}
-                formatter={(value: number) => [`${value.toFixed(2)}‰`, "Promille"]}
+                formatter={(value: number) => [`${value.toFixed(2)}‰`, "‰"]}
               />
               <defs>
                 <linearGradient id="promilleGrad" x1="0" y1="0" x2="0" y2="1">
