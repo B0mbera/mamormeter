@@ -1,4 +1,5 @@
 import { PromilleResult, PromilleStatus, ChartDataPoint } from "@/types";
+import { MAX_BAC_PROMILLE } from "@/lib/constants";
 
 interface DrinkInput {
   ml: number;
@@ -49,7 +50,7 @@ export function calculatePromille(
     (now.getTime() - firstDrinkTime.getTime()) / (1000 * 60 * 60);
   const eliminatedPromille = Math.max(0, elapsedHours) * 0.15;
 
-  const currentPromille = Math.max(0, maxPromille - eliminatedPromille);
+  const currentPromille = Math.min(Math.max(0, maxPromille - eliminatedPromille), MAX_BAC_PROMILLE);
   const soberingMinutes =
     currentPromille > 0 ? (currentPromille / 0.15) * 60 : 0;
 
@@ -139,7 +140,7 @@ export function calculateChartData(
     const maxBac = alcoholAtTime / (weightKg * r);
     const elapsed = (t - firstDrinkTime.getTime()) / (1000 * 60 * 60);
     const eliminated = elapsed * 0.15;
-    const bac = Math.max(0, maxBac - eliminated);
+    const bac = Math.min(Math.max(0, maxBac - eliminated), MAX_BAC_PROMILLE);
 
     points.push({
       time: new Date(t).toLocaleTimeString(localeStr, {

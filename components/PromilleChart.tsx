@@ -62,7 +62,7 @@ export function PromilleChart({ data }: PromilleChartProps) {
                 tick={{ fontSize: 9, fill: "hsl(var(--muted-foreground))" }}
                 tickLine={false}
                 axisLine={false}
-                domain={[0, "auto"]}
+                domain={[0, (max: number) => Math.min(Math.max(max, 0.5), 6)]}
               />
               <Tooltip
                 contentStyle={{
