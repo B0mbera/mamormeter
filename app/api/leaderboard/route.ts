@@ -6,51 +6,86 @@ import { PARTIES } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
+const LEADERBOARD_LIMIT = 200;
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const period = searchParams.get("period") || "24h";
     const university = searchParams.get("university") || null;
 
-    const users = await prisma.user.findMany({
-      where: university ? { university } : undefined,
-      include: {
-        drinks: { orderBy: { consumedAt: "desc" } },
-      },
-    });
-
     const now = new Date();
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
+    // Only load users who actually have drinks in the relevant period
+    const whereClause = {
+      ...(university ? { university } : {}),
+      drinks: {
+        some: period === "alltime" ? {} : { consumedAt: { gte: twentyFourHoursAgo } },
+      },
+    };
+
+    const users = await prisma.user.findMany({
+      where: whereClause,
+      select: {
+        id: true,
+        name: true,
+        weightKg: true,
+        gender: true,
+        emoji: true,
+        university: true,
+        createdAt: true,
+        drinks: {
+          where: period === "alltime" ? {} : { consumedAt: { gte: twentyFourHoursAgo } },
+          orderBy: { consumedAt: "desc" },
+          select: {
+            id: true,
+            userId: true,
+            name: true,
+            ml: true,
+            alcoholPct: true,
+            consumedAt: true,
+          },
+        },
+      },
+    });
+
+    // For alltime, calculate total alcohol grams per user
+    let alltimeGramsMap: Map<string, number> | null = null;
+    if (period === "alltime") {
+      alltimeGramsMap = new Map();
+      for (const user of users) {
+        const grams = calculateTotalAlcoholGrams(
+          user.drinks.map((d) => ({
+            ml: d.ml,
+            alcoholPct: d.alcoholPct,
+            consumedAt: d.consumedAt.toISOString(),
+          }))
+        );
+        alltimeGramsMap.set(user.id, grams);
+      }
+    }
+
     const entries: LeaderboardEntry[] = users.map((user) => {
-      const recentDrinks = user.drinks.filter(
-        (d) => new Date(d.consumedAt) >= twentyFourHoursAgo
-      );
-
-      const allDrinkInputs = user.drinks.map((d) => ({
-        ml: d.ml,
-        alcoholPct: d.alcoholPct,
-        consumedAt: d.consumedAt.toISOString(),
-      }));
-
-      const recentDrinkInputs = recentDrinks.map((d) => ({
+      const drinkInputs = user.drinks.map((d) => ({
         ml: d.ml,
         alcoholPct: d.alcoholPct,
         consumedAt: d.consumedAt.toISOString(),
       }));
 
       const promille = calculatePromille(
-        recentDrinkInputs,
+        drinkInputs,
         user.weightKg,
         user.gender as "male" | "female"
       );
 
-      const totalAlcoholGrams = calculateTotalAlcoholGrams(allDrinkInputs);
+      const totalAlcoholGrams = alltimeGramsMap
+        ? (alltimeGramsMap.get(user.id) || 0)
+        : calculateTotalAlcoholGrams(drinkInputs);
 
-      // Build drink summary: count each drink name
+      // Build drink summary
       const drinkCounts: Record<string, number> = {};
-      const drinksToSummarize = period === "alltime" ? user.drinks : recentDrinks;
-      for (const d of drinksToSummarize) {
+      for (const d of user.drinks) {
         drinkCounts[d.name] = (drinkCounts[d.name] || 0) + 1;
       }
       const drinksSummary = Object.entries(drinkCounts).map(
@@ -66,7 +101,7 @@ export async function GET(request: NextRequest) {
           emoji: user.emoji,
           university: user.university,
           createdAt: user.createdAt.toISOString(),
-          drinks: recentDrinks.map((d) => ({
+          drinks: user.drinks.map((d) => ({
             id: d.id,
             userId: d.userId,
             name: d.name,
@@ -82,23 +117,21 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Filter out users with no activity for the selected period
-    let filtered: LeaderboardEntry[];
+    // Sort and limit
     if (period === "alltime") {
-      filtered = entries.filter((e) => e.totalAlcoholGrams > 0);
-      filtered.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
+      entries.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
     } else {
-      filtered = entries.filter((e) => e.promille.currentPromille > 0 || e.user.drinks.length > 0);
-      filtered.sort(
+      entries.sort(
         (a, b) => b.promille.currentPromille - a.promille.currentPromille
       );
     }
 
-    filtered.forEach((entry, index) => {
+    const limited = entries.slice(0, LEADERBOARD_LIMIT);
+    limited.forEach((entry, index) => {
       entry.rank = index + 1;
     });
 
-    // Build party combined scores
+    // Build party combined scores from ALL matching entries (not just limited)
     const partyScores: PartyScore[] = PARTIES.map((party) => {
       const partyEntries = entries.filter((e) => e.user.university === party.id);
       const totalPromille = partyEntries.reduce(
@@ -122,7 +155,6 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Rank parties
     if (period === "alltime") {
       partyScores.sort((a, b) => b.totalAlcoholGrams - a.totalAlcoholGrams);
     } else {
@@ -132,7 +164,7 @@ export async function GET(request: NextRequest) {
       p.rank = i + 1;
     });
 
-    return NextResponse.json({ entries: filtered, partyScores }, {
+    return NextResponse.json({ entries: limited, partyScores }, {
       headers: {
         "Cache-Control": "public, s-maxage=5, stale-while-revalidate=10",
       },

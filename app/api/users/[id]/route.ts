@@ -9,10 +9,17 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
     const user = await prisma.user.findUnique({
       where: { id },
       include: {
-        drinks: { orderBy: { consumedAt: "desc" } },
+        drinks: {
+          where: { consumedAt: { gte: twentyFourHoursAgo } },
+          orderBy: { consumedAt: "desc" },
+        },
       },
     });
 
@@ -23,15 +30,8 @@ export async function GET(
       );
     }
 
-    const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-
-    const recentDrinks = user.drinks.filter(
-      (d) => new Date(d.consumedAt) >= twentyFourHoursAgo
-    );
-
     const promille = calculatePromille(
-      recentDrinks.map((d) => ({
+      user.drinks.map((d) => ({
         ml: d.ml,
         alcoholPct: d.alcoholPct,
         consumedAt: d.consumedAt.toISOString(),
@@ -48,7 +48,7 @@ export async function GET(
       emoji: user.emoji,
       university: user.university,
       createdAt: user.createdAt.toISOString(),
-      drinks: recentDrinks.map((d) => ({
+      drinks: user.drinks.map((d) => ({
         id: d.id,
         userId: d.userId,
         name: d.name,
