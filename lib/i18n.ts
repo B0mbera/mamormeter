@@ -3,7 +3,7 @@ export type Locale = "hu" | "en";
 const translations = {
   hu: {
     "app.title": "MámorMéter",
-    "app.medikus": "53. Medikus Kupa",
+    "app.event": "Választás 2026",
     "app.subtitle": "Promille Tracker",
 
     "nav.dashboard": "Műszerfal",
@@ -12,7 +12,7 @@ const translations = {
     "nav.support": "Támogatás",
 
     "onboarding.title": "Üdv a MámorMéterben!",
-    "onboarding.medikusTitle": "53. Medikus Kupa",
+    "onboarding.eventTitle": "Választás 2026",
     "onboarding.subtitle": "Készítsd el a profilod és kezdj el mérni!",
     "onboarding.name": "Becenév",
     "onboarding.namePlaceholder": "Max 20 karakter",
@@ -21,8 +21,8 @@ const translations = {
     "onboarding.gender": "Nem",
     "onboarding.male": "Férfi",
     "onboarding.female": "Nő",
-    "onboarding.university": "Egyetem",
-    "onboarding.selectUni": "Válassz egyetemet",
+    "onboarding.party": "Párt",
+    "onboarding.selectParty": "Válassz pártot",
     "onboarding.submit": "Indulhat!",
     "onboarding.loading": "Létrehozás...",
 
@@ -59,7 +59,7 @@ const translations = {
     "leaderboard.title": "Ranglétra",
     "leaderboard.24h": "24 óra",
     "leaderboard.alltime": "Örökös",
-    "leaderboard.allUnis": "Mind",
+    "leaderboard.allParties": "Mind",
     "leaderboard.empty": "Senki sem iszik még... 🍵",
     "leaderboard.emptyAlltime": "Még nincs adat 🍵",
     "leaderboard.you": "Te",
@@ -81,7 +81,7 @@ const translations = {
     "toast.redirecting": "Visszatérés a műszerfalra...",
 
     "landing.what": "Mi ez?",
-    "landing.step1": "Készíts profilt (becenév, testsúly, egyetem)",
+    "landing.step1": "Készíts profilt (becenév, testsúly, párt)",
     "landing.step2": "Loggold az italaidat egy kattintással",
     "landing.step3": "Kövesd a promille szinted valós időben",
     "landing.step4": "Nézd a ranglétrán ki iszik a legtöbbet",
@@ -90,13 +90,13 @@ const translations = {
     "validation.nameRequired": "Add meg a beceneved!",
     "validation.nameTooLong": "Becenév maximum 20 karakter!",
     "validation.weightInvalid": "Testsúly 30-250 kg között legyen!",
-    "validation.uniRequired": "Válassz egyetemet!",
+    "validation.partyRequired": "Válassz pártot!",
     "validation.drinkNameRequired": "Add meg az ital nevét!",
     "validation.nameProfanity": "Válassz egy szebb becenevet!",
   },
   en: {
     "app.title": "MámorMéter",
-    "app.medikus": "53rd Medikus Cup",
+    "app.event": "Election 2026",
     "app.subtitle": "Promille Tracker",
 
     "nav.dashboard": "Dashboard",
@@ -105,7 +105,7 @@ const translations = {
     "nav.support": "Support",
 
     "onboarding.title": "Welcome to MámorMéter!",
-    "onboarding.medikusTitle": "53rd Medikus Cup",
+    "onboarding.eventTitle": "Election 2026",
     "onboarding.subtitle": "Create your profile and start tracking!",
     "onboarding.name": "Nickname",
     "onboarding.namePlaceholder": "Max 20 characters",
@@ -114,8 +114,8 @@ const translations = {
     "onboarding.gender": "Gender",
     "onboarding.male": "Male",
     "onboarding.female": "Female",
-    "onboarding.university": "University",
-    "onboarding.selectUni": "Select university",
+    "onboarding.party": "Party",
+    "onboarding.selectParty": "Select party",
     "onboarding.submit": "Let's go!",
     "onboarding.loading": "Creating...",
 
@@ -152,7 +152,7 @@ const translations = {
     "leaderboard.title": "Leaderboard",
     "leaderboard.24h": "24 Hours",
     "leaderboard.alltime": "All Time",
-    "leaderboard.allUnis": "All",
+    "leaderboard.allParties": "All",
     "leaderboard.empty": "Nobody's drinking yet... 🍵",
     "leaderboard.emptyAlltime": "No data yet 🍵",
     "leaderboard.you": "You",
@@ -174,7 +174,7 @@ const translations = {
     "toast.redirecting": "Redirecting to dashboard...",
 
     "landing.what": "What is this?",
-    "landing.step1": "Create a profile (nickname, weight, university)",
+    "landing.step1": "Create a profile (nickname, weight, party)",
     "landing.step2": "Log your drinks with one tap",
     "landing.step3": "Track your BAC level in real time",
     "landing.step4": "Check the leaderboard to see who drinks the most",
@@ -183,7 +183,7 @@ const translations = {
     "validation.nameRequired": "Enter your nickname!",
     "validation.nameTooLong": "Nickname max 20 characters!",
     "validation.weightInvalid": "Weight must be between 30-250 kg!",
-    "validation.uniRequired": "Select a university!",
+    "validation.partyRequired": "Select a party!",
     "validation.drinkNameRequired": "Enter the drink name!",
     "validation.nameProfanity": "Please choose a nicer nickname!",
   },

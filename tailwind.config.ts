@@ -39,11 +39,12 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        uni: {
-          dote: "#16a34a",
-          pote: "#dc2626",
-          sote: "#2563eb",
-          szote: "#7c3aed",
+        party: {
+          fidesz: "#f97316",
+          tisza: "#0ea5e9",
+          mihazank: "#16a34a",
+          dk: "#1d4ed8",
+          mkkp: "#eab308",
         },
       },
       borderRadius: {

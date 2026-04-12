@@ -1,15 +1,15 @@
-# MámorMéter 🍻
+# MámorMéter 🗳️🍻
 
-Valós idejű promille tracker az **53. Medikus Kupára** (Pécs, 2026. április 9–11.).
+Valós idejű promille tracker a **2026-os országgyűlési választásra** (Április 12.).
 
 > **Éles app:** [mamormeter.vercel.app](https://mamormeter.vercel.app)
 
 ## Funkciók
 
 - **Widmark-formula** promille számítás — nemre és testsúlyra kalibrált
-- **Gyors hozzáadás** — 13 preset ital (Pécsi Világos, Heineken, Jäger, stb.)
+- **Gyors hozzáadás** — 13 preset ital (Sör, Heineken, Jäger, stb.)
 - **Valós idejű promille görbe** — Recharts grafikon
-- **Ranglétra** — 24 órás + örökös, egyetemi szűrővel (DOTE / POTE / SOTE / SZOTE)
+- **Ranglétra** — 24 órás + örökös, párt szűrővel (FIDESZ / TISZA / Mi Hazánk / DK / MKKP)
 - **Regisztráció nélküli ranglétra** — vendégek is megtekinthetik
 - **Sötét mód** — persistent toggle minden oldalon
 - **Magyar / Angol** nyelvváltás
@@ -54,7 +54,7 @@ lib/
 ├── widmark.ts            # Promille számítás (Widmark-formula)
 ├── profanity.ts          # Csúnya szó szűrő
 ├── i18n.ts               # Magyar / Angol fordítások
-├── constants.ts          # Egyetemek, kategóriák
+├── constants.ts          # Pártok, kategóriák
 └── prisma.ts             # Prisma client singleton
 
 store/
@@ -71,11 +71,10 @@ prisma/
 
 ### Environment Variables
 
-| Variable              | Leírás                                   |
-| --------------------- | ---------------------------------------- |
-| `DATABASE_URL`        | PostgreSQL connection string (Neon.tech) |
-| `DIRECT_URL`          | Direct PostgreSQL URL (Neon.tech)        |
-| `NEXT_PUBLIC_EDITION` | `base` vagy `medikus`                    |
+| Variable       | Leírás                                   |
+| -------------- | ---------------------------------------- |
+| `DATABASE_URL` | PostgreSQL connection string (Neon.tech) |
+| `DIRECT_URL`   | Direct PostgreSQL URL (Neon.tech)        |
 
 ### Setup
 
@@ -92,10 +91,3 @@ npm run dev
 ```bash
 npx vercel --prod
 ```
-
-### Editions
-
-- **base**: Standard MámorMéter
-- **medikus**: 53. Medikus Kupa themed (Pécs 2026, university selection)
-
-Set `NEXT_PUBLIC_EDITION=medikus` for the Medikus Kupa version.

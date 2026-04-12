@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { getUniversity } from "@/lib/constants";
+import { getParty } from "@/lib/constants";
 
 interface UniversityBadgeProps {
   universityId: string | null | undefined;
@@ -10,9 +9,9 @@ interface UniversityBadgeProps {
 }
 
 const sizes = {
-  sm: { img: 16, text: "text-[10px]" },
-  md: { img: 20, text: "text-xs" },
-  lg: { img: 28, text: "text-sm" },
+  sm: { emoji: "text-sm", text: "text-[10px]" },
+  md: { emoji: "text-base", text: "text-xs" },
+  lg: { emoji: "text-xl", text: "text-sm" },
 };
 
 export function UniversityBadge({
@@ -22,23 +21,17 @@ export function UniversityBadge({
 }: UniversityBadgeProps) {
   if (!universityId) return null;
 
-  const uni = getUniversity(universityId);
-  if (!uni) return null;
+  const party = getParty(universityId);
+  if (!party) return null;
 
   const s = sizes[size];
 
   return (
     <div className="flex items-center gap-1">
-      <Image
-        src={uni.logo}
-        alt={uni.name}
-        width={s.img}
-        height={s.img}
-        className="rounded-sm object-contain"
-      />
+      <span className={s.emoji}>{party.emoji}</span>
       {showName && (
-        <span className={`${s.text} font-semibold`} style={{ color: uni.color }}>
-          {uni.id}
+        <span className={`${s.text} font-semibold`} style={{ color: party.color }}>
+          {party.name}
         </span>
       )}
     </div>

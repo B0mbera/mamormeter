@@ -10,10 +10,9 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
-import { LeaderboardEntry, UniversityScore } from "@/types";
-import { UNIVERSITIES } from "@/lib/constants";
+import { LeaderboardEntry, PartyScore } from "@/types";
+import { PARTIES } from "@/lib/constants";
 import { Trophy, ArrowLeft } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 export default function LeaderboardPage() {
@@ -24,7 +23,7 @@ export default function LeaderboardPage() {
   const [period, setPeriod] = useState<"24h" | "alltime">("24h");
   const [uniFilter, setUniFilter] = useState<string | null>(null);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [uniScores, setUniScores] = useState<UniversityScore[]>([]);
+  const [partyScores, setPartyScores] = useState<PartyScore[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
   const hasFetched = useRef(false);
 
@@ -43,7 +42,7 @@ export default function LeaderboardPage() {
 
       const data = await res.json();
       setEntries(data.entries || []);
-      setUniScores(data.universityScores || []);
+      setPartyScores(data.partyScores || []);
     } catch {
       // ignore
     } finally {
@@ -73,7 +72,7 @@ export default function LeaderboardPage() {
     return `${rank}.`;
   }
 
-  const uniScoreLabel = period === "alltime"
+  const partyScoreLabel = period === "alltime"
     ? (locale === "hu" ? "Össz. standard ital" : "Total standard drinks")
     : (locale === "hu" ? "Össz. promille" : "Total promille");
 
@@ -102,31 +101,31 @@ export default function LeaderboardPage() {
         </div>
 
         <p className="text-xs text-center text-violet-600 font-medium">
-          53. Medikus Kupa · Pécs 2026
+          🗳️ Választás 2026 · Április 12.
         </p>
 
-        {/* University combined scores */}
-        {!uniFilter && uniScores.length > 0 && (
+        {/* Party combined scores */}
+        {!uniFilter && partyScores.length > 0 && (
           <Card>
             <CardContent className="pt-3 pb-3">
               <p className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-                {locale === "hu" ? "Egyetemi rangsor" : "University ranking"}
+                {locale === "hu" ? "Párt rangsor" : "Party ranking"}
               </p>
               <div className="space-y-1.5">
-                {uniScores.map((u) => (
-                  <div key={u.universityId} className="flex items-center gap-2">
-                    <span className="text-sm font-bold w-6 text-center">{getRankEmoji(u.rank)}</span>
-                    <Image src={u.logo} alt={u.universityId} width={20} height={20} className="rounded-sm" />
-                    <span className="text-xs font-medium flex-1" style={{ color: u.color }}>
-                      {u.universityId}
+                {partyScores.map((p) => (
+                  <div key={p.partyId} className="flex items-center gap-2">
+                    <span className="text-sm font-bold w-6 text-center">{getRankEmoji(p.rank)}</span>
+                    <span className="text-base">{p.emoji}</span>
+                    <span className="text-xs font-medium flex-1" style={{ color: p.color }}>
+                      {p.name}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {u.memberCount} {locale === "hu" ? "fő" : "members"}
+                      {p.memberCount} {locale === "hu" ? "fő" : "members"}
                     </span>
-                    <span className="text-sm font-bold tabular-nums" style={{ color: u.color }}>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: p.color }}>
                       {period === "alltime"
-                        ? Math.round((u.totalAlcoholGrams / 10) * 10) / 10
-                        : u.totalPromille.toFixed(2)}
+                        ? Math.round((p.totalAlcoholGrams / 10) * 10) / 10
+                        : p.totalPromille.toFixed(2)}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
                       {period === "alltime" ? "std" : "‰"}
@@ -134,7 +133,7 @@ export default function LeaderboardPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1.5 text-center">{uniScoreLabel}</p>
+              <p className="text-[10px] text-muted-foreground mt-1.5 text-center">{partyScoreLabel}</p>
             </CardContent>
           </Card>
         )}
@@ -150,7 +149,7 @@ export default function LeaderboardPage() {
             <TabsTrigger value="alltime">{t("leaderboard.alltime")}</TabsTrigger>
           </TabsList>
 
-          {/* University filter */}
+          {/* Party filter */}
           <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
               <Button
                 size="sm"
@@ -158,29 +157,23 @@ export default function LeaderboardPage() {
                 className="h-7 text-[10px] sm:text-xs shrink-0"
                 onClick={() => setUniFilter(null)}
               >
-                {t("leaderboard.allUnis")}
+                {t("leaderboard.allParties")}
               </Button>
-              {UNIVERSITIES.map((uni) => (
+              {PARTIES.map((party) => (
                 <Button
-                  key={uni.id}
+                  key={party.id}
                   size="sm"
-                  variant={uniFilter === uni.id ? "default" : "outline"}
+                  variant={uniFilter === party.id ? "default" : "outline"}
                   className="h-7 text-[10px] sm:text-xs shrink-0 gap-1"
                   style={
-                    uniFilter === uni.id
-                      ? { backgroundColor: uni.color, borderColor: uni.color }
+                    uniFilter === party.id
+                      ? { backgroundColor: party.color, borderColor: party.color }
                       : {}
                   }
-                  onClick={() => setUniFilter(uni.id)}
+                  onClick={() => setUniFilter(party.id)}
                 >
-                  <Image
-                    src={uni.logo}
-                    alt={uni.id}
-                    width={14}
-                    height={14}
-                    className="rounded-sm"
-                  />
-                  {uni.id}
+                  <span>{party.emoji}</span>
+                  {party.id}
                 </Button>
               ))}
             </div>

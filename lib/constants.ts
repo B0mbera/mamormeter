@@ -1,54 +1,55 @@
-export type University = "DOTE" | "POTE" | "SOTE" | "SZOTE";
+export type Party = "FIDESZ" | "TISZA" | "MIHAZANK" | "DK" | "MKKP";
 
-export const UNIVERSITIES: {
-  id: University;
+export const PARTIES: {
+  id: Party;
   name: string;
   nameEn: string;
   color: string;
-  logo: string;
+  emoji: string;
 }[] = [
   {
-    id: "DOTE",
-    name: "Debreceni Egyetem",
-    nameEn: "University of Debrecen",
+    id: "FIDESZ",
+    name: "FIDESZ-KDNP",
+    nameEn: "FIDESZ-KDNP",
+    color: "#f97316",
+    emoji: "🟠",
+  },
+  {
+    id: "TISZA",
+    name: "TISZA",
+    nameEn: "TISZA",
+    color: "#0ea5e9",
+    emoji: "🔵",
+  },
+  {
+    id: "MIHAZANK",
+    name: "Mi Hazánk",
+    nameEn: "Mi Hazánk",
     color: "#16a34a",
-    logo: "https://i.imgur.com/flnMJOm.png",
+    emoji: "🟢",
   },
   {
-    id: "POTE",
-    name: "Pécsi Tudományegyetem",
-    nameEn: "University of Pécs",
-    color: "#dc2626",
-    logo: "https://i.imgur.com/OC7Jnl9.png",
+    id: "DK",
+    name: "DK",
+    nameEn: "DK",
+    color: "#1d4ed8",
+    emoji: "🔷",
   },
   {
-    id: "SOTE",
-    name: "Semmelweis Egyetem",
-    nameEn: "Semmelweis University",
-    color: "#2563eb",
-    logo: "https://i.imgur.com/BzvZPtt.png",
-  },
-  {
-    id: "SZOTE",
-    name: "Szegedi Tudományegyetem",
-    nameEn: "University of Szeged",
-    color: "#7c3aed",
-    logo: "https://i.imgur.com/tFwORdD.png",
+    id: "MKKP",
+    name: "MKKP",
+    nameEn: "MKKP",
+    color: "#eab308",
+    emoji: "🎪",
   },
 ];
 
 export const COOLDOWN_SECONDS = 5;
-export const MAX_ML_PER_DRINK = 2000;
+export const MAX_ML_PER_DRINK = 1000;
 export const MIN_ML_PER_DRINK = 10;
 export const MAX_ALCOHOL_PCT = 96;
 export const MAX_MULTIPLIER = 3;
 
-export const EDITION = "medikus" as const;
-
-export function isMedikus(): boolean {
-  return true;
-}
-
-export function getUniversity(id: string | null | undefined) {
-  return UNIVERSITIES.find((u) => u.id === id) || null;
+export function getParty(id: string | null | undefined) {
+  return PARTIES.find((p) => p.id === id) || null;
 }

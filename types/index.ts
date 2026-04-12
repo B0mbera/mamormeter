@@ -66,12 +66,12 @@ export interface LeaderboardEntry {
   drinksSummary: string[];
 }
 
-export interface UniversityScore {
-  universityId: string;
+export interface PartyScore {
+  partyId: string;
   name: string;
   nameEn: string;
   color: string;
-  logo: string;
+  emoji: string;
   totalPromille: number;
   totalAlcoholGrams: number;
   memberCount: number;

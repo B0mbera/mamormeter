@@ -3,24 +3,25 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MámorMéter — 53. Medikus Kupa · Pécs 2026",
-  description: "Az 53. Medikus Kupa hivatalos promille trackere! 🍻 Kövesd az ivásod, versenyezz az egyetemed színeiben! Pécs, 2026. április 9-11.",
+  title: "MámorMéter — Választás 2026 · Április 12.",
+  description: "A 2026-os országgyűlési választás hivatalos ivós trackere! 🗳️🍻 Kövesd az ivásod, versenyezz a pártod színeiben! Április 12.",
   manifest: "/manifest.json",
   openGraph: {
-    title: "MámorMéter — 53. Medikus Kupa",
-    description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
+    title: "MámorMéter — Választás 2026",
+    description: "Promille tracker az 5 parlamenti párt versenyéhez! FIDESZ · TISZA · Mi Hazánk · DK · MKKP",
     siteName: "MámorMéter",
     type: "website",
     locale: "hu_HU",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MámorMéter — 53. Medikus Kupa",
-    description: "Promille tracker a 4 orvosi egyetem versenyéhez! DOTE · POTE · SOTE · SZOTE",
+    title: "MámorMéter — Választás 2026",
+    description: "Promille tracker az 5 parlamenti párt versenyéhez! FIDESZ · TISZA · Mi Hazánk · DK · MKKP",
   },
 };
 
@@ -45,6 +46,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

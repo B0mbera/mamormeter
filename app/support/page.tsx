@@ -59,7 +59,7 @@ export default function SupportPage() {
           <CardContent className="pt-5 space-y-2 text-center">
             <p className="text-sm font-semibold">🍻 MámorMéter</p>
             <p className="text-xs text-violet-600 font-medium">
-              53. Medikus Kupa · Pécs 2026
+              🗳️ Választás 2026 · Április 12.
             </p>
             <p className="text-xs text-muted-foreground">
               Made with ❤️ + 🍺

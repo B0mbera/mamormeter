@@ -11,10 +11,9 @@ import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { UNIVERSITIES } from "@/lib/constants";
+import { PARTIES } from "@/lib/constants";
 import { containsProfanity } from "@/lib/profanity";
 import { toast } from "sonner";
-import Image from "next/image";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -41,7 +40,7 @@ export default function OnboardingPage() {
       return;
     }
     if (!university) {
-      toast.error(t("validation.uniRequired"));
+      toast.error(t("validation.partyRequired"));
       return;
     }
 
@@ -84,11 +83,10 @@ export default function OnboardingPage() {
         </div>
 
         <div className="text-center space-y-1">
-          <h1 className="text-3xl sm:text-4xl font-bold">🍻 MámorMéter</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold">🗳️ MámorMéter</h1>
           <p className="text-sm font-bold text-violet-600 dark:text-violet-400">
-            53. Medikus Kupa · Pécs 2026
+            Választás 2026 · Április 12.
           </p>
-          <p className="text-[10px] text-muted-foreground">április 9–11.</p>
           <p className="text-sm text-muted-foreground">{t("onboarding.subtitle")}</p>
         </div>
 
@@ -138,31 +136,25 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {/* University selector */}
+            {/* Party selector */}
             <div className="space-y-2">
-              <Label>{t("onboarding.university")}</Label>
+              <Label>{t("onboarding.party")}</Label>
                 <div className="grid grid-cols-2 gap-2">
-                  {UNIVERSITIES.map((uni) => (
+                  {PARTIES.map((party) => (
                     <Button
-                      key={uni.id}
+                      key={party.id}
                       type="button"
-                      variant={university === uni.id ? "default" : "outline"}
+                      variant={university === party.id ? "default" : "outline"}
                       className="h-14 flex gap-2 items-center"
                       style={
-                        university === uni.id
-                          ? { backgroundColor: uni.color, borderColor: uni.color }
-                          : { borderColor: uni.color + "40" }
+                        university === party.id
+                          ? { backgroundColor: party.color, borderColor: party.color }
+                          : { borderColor: party.color + "40" }
                       }
-                      onClick={() => setUniversity(uni.id)}
+                      onClick={() => setUniversity(party.id)}
                     >
-                      <Image
-                        src={uni.logo}
-                        alt={uni.name}
-                        width={24}
-                        height={24}
-                        className="rounded-sm"
-                      />
-                      <span className="text-xs font-bold">{uni.id}</span>
+                      <span className="text-lg">{party.emoji}</span>
+                      <span className="text-xs font-bold">{party.name}</span>
                     </Button>
                   ))}
                 </div>

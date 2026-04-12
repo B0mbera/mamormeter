@@ -6,9 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { LeaderboardEntry } from "@/types";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getStatusText, getSoberingText } from "@/lib/i18n";
-import { getUniversity } from "@/lib/constants";
+import { getParty } from "@/lib/constants";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Image from "next/image";
 
 interface LeaderboardCardProps {
   entry: LeaderboardEntry;
@@ -26,7 +25,7 @@ function getRankDisplay(rank: number): string {
 export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardProps) {
   const { locale, t } = useLanguageStore();
   const { user, promille, totalAlcoholGrams, rank, drinksSummary } = entry;
-  const uni = getUniversity(user.university);
+  const party = getParty(user.university);
   const [expanded, setExpanded] = useState(false);
 
   const standardDrinks = Math.round((totalAlcoholGrams / 10) * 10) / 10;
@@ -42,9 +41,12 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             {getRankDisplay(rank)}
           </div>
 
-          {uni ? (
-            <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center">
-              <Image src={uni.logo} alt={uni.id} width={28} height={28} className="rounded-sm object-contain" />
+          {party ? (
+            <div
+              className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center rounded-lg text-lg"
+              style={{ backgroundColor: party.color + "20" }}
+            >
+              {party.emoji}
             </div>
           ) : (
             <div className="text-2xl sm:text-3xl shrink-0">🍻</div>
@@ -60,9 +62,9 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
               )}
             </div>
             <div className="flex items-center gap-1.5 mt-0.5">
-              {uni && (
-                <span className="text-[10px] font-medium" style={{ color: uni.color }}>
-                  {uni.id}
+              {party && (
+                <span className="text-[10px] font-medium" style={{ color: party.color }}>
+                  {party.name}
                 </span>
               )}
               <p className="text-[10px] sm:text-xs text-muted-foreground">

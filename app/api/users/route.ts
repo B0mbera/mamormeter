@@ -43,8 +43,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const validUnis = ["DOTE", "POTE", "SOTE", "SZOTE"];
-    const university = body.university && validUnis.includes(body.university)
+    const validParties = ["FIDESZ", "TISZA", "MIHAZANK", "DK", "MKKP"];
+    const university = body.university && validParties.includes(body.university)
       ? body.university
       : null;
 

@@ -44,12 +44,11 @@ export default function HomePage() {
 
       <div className="w-full max-w-sm space-y-8 text-center">
         <div className="space-y-2">
-          <span className="text-6xl block">🍻</span>
+          <span className="text-6xl block">🗳️</span>
           <h1 className="text-3xl sm:text-4xl font-bold">MámorMéter</h1>
           <p className="text-sm font-bold text-violet-600 dark:text-violet-400">
-            53. Medikus Kupa · Pécs 2026
+            🍻 Választás 2026 · Április 12.
           </p>
-          <p className="text-[10px] text-muted-foreground">április 9–11.</p>
         </div>
 
         {/* How it works */}

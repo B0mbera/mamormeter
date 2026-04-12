@@ -7,11 +7,11 @@ async function main() {
 
   const presets = [
     // === Sörök (5dl) ===
-    { name: "Pécsi Világos 5dl", nameEn: "Pécsi Lager 5dl", ml: 500, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
-    { name: "Pécsi Prémium 5dl", nameEn: "Pécsi Premium 5dl", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Világos sör 5dl", nameEn: "Lager 5dl", ml: 500, alcoholPct: 4.6, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
+    { name: "Prémium sör 5dl", nameEn: "Premium Lager 5dl", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
     { name: "Heineken 5dl", nameEn: "Heineken 5dl", ml: 500, alcoholPct: 5.0, category: "Sörök", categoryEn: "Beers", emoji: "🍺" },
 
-    // === Tömény (Medikus Kupa klasszikusok) ===
+    // === Tömény ===
     { name: "Jägermeister", nameEn: "Jägermeister", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🦌" },
     { name: "Bumbu Rum", nameEn: "Bumbu Rum", ml: 40, alcoholPct: 35, category: "Tömény", categoryEn: "Spirits", emoji: "🏝️" },
     { name: "Vodka", nameEn: "Vodka", ml: 40, alcoholPct: 40, category: "Tömény", categoryEn: "Spirits", emoji: "🥃" },

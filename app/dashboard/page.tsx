@@ -14,7 +14,6 @@ import { PromilleChart } from "@/components/PromilleChart";
 import { UniversityBadge } from "@/components/UniversityBadge";
 import { User, Drink, PromilleResult, ChartDataPoint } from "@/types";
 import { calculatePromille } from "@/lib/widmark";
-import { isMedikus } from "@/lib/constants";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -155,14 +154,14 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {isMedikus() && user.university ? (
+            {user.university ? (
               <UniversityBadge universityId={user.university} size="lg" showName={false} />
             ) : (
               <span className="text-2xl">{user.emoji}</span>
             )}
             <div>
               <h1 className="text-sm sm:text-base font-bold">{user.name}</h1>
-              {isMedikus() && user.university && (
+              {user.university && (
                 <UniversityBadge universityId={user.university} size="sm" />
               )}
             </div>

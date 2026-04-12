@@ -59,7 +59,11 @@ export async function GET(
       promille,
     };
 
-    return NextResponse.json(response);
+    return NextResponse.json(response, {
+      headers: {
+        "Cache-Control": "private, s-maxage=3, stale-while-revalidate=5",
+      },
+    });
   } catch {
     return NextResponse.json(
       { error: "Server error" },
