@@ -87,11 +87,13 @@ export function calculateTotalAlcoholGrams(drinks: DrinkInput[]): number {
 export function calculateChartData(
   drinks: DrinkInput[],
   weightKg: number,
-  gender: "male" | "female"
+  gender: "male" | "female",
+  locale: string = "hu"
 ): ChartDataPoint[] {
   if (drinks.length === 0) return [];
 
   const now = new Date();
+  const localeStr = locale === "en" ? "en-GB" : "hu-HU";
   const sortedDrinks = [...drinks].sort(
     (a, b) =>
       new Date(a.consumedAt).getTime() - new Date(b.consumedAt).getTime()
@@ -109,8 +111,12 @@ export function calculateChartData(
   const endTime = new Date(
     firstDrinkTime.getTime() + soberingTotalMinutes * 60 * 1000
   );
+  // Show chart up to 30 min into the future, but at most until sober
   const chartEnd = new Date(
-    Math.max(now.getTime() + 30 * 60 * 1000, endTime.getTime())
+    Math.min(
+      Math.max(now.getTime() + 30 * 60 * 1000, endTime.getTime()),
+      endTime.getTime()
+    )
   );
 
   const points: ChartDataPoint[] = [];
@@ -134,7 +140,7 @@ export function calculateChartData(
     const bac = Math.max(0, maxBac - eliminated);
 
     points.push({
-      time: new Date(t).toLocaleTimeString("hu-HU", {
+      time: new Date(t).toLocaleTimeString(localeStr, {
         hour: "2-digit",
         minute: "2-digit",
       }),

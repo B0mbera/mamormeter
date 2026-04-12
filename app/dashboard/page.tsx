@@ -13,7 +13,7 @@ import { DrinkLog } from "@/components/DrinkLog";
 import { PromilleChart } from "@/components/PromilleChart";
 import { UniversityBadge } from "@/components/UniversityBadge";
 import { User, Drink, PromilleResult, ChartDataPoint } from "@/types";
-import { calculatePromille } from "@/lib/widmark";
+import { calculatePromille, calculateChartData } from "@/lib/widmark";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -33,6 +33,19 @@ export default function DashboardPage() {
     restoreFromCookie();
   }, [restoreFromCookie]);
 
+  // Recalculate promille + chart from existing drinks (no API call)
+  const recalculate = useCallback((userData: User, drinksData: Drink[]) => {
+    const drinksForCalc = drinksData.map((d) => ({
+      ml: d.ml,
+      alcoholPct: d.alcoholPct,
+      consumedAt: new Date(d.consumedAt),
+    }));
+
+    const result = calculatePromille(drinksForCalc, userData.weightKg, userData.gender);
+    setPromille(result);
+    setChartData(calculateChartData(drinksForCalc, userData.weightKg, userData.gender, locale));
+  }, [locale]);
+
   const fetchData = useCallback(async () => {
     if (!userId) return;
 
@@ -46,75 +59,13 @@ export default function DashboardPage() {
 
       setUser(data);
       setDrinks(data.drinks || []);
-
-      const drinksForCalc = (data.drinks || []).map((d: Drink) => ({
-        ml: d.ml,
-        alcoholPct: d.alcoholPct,
-        consumedAt: new Date(d.consumedAt),
-      }));
-
-      const result = calculatePromille(
-        drinksForCalc,
-        data.weightKg,
-        data.gender
-      );
-      setPromille(result);
-
-      // Build chart data from drinks
-      if (data.drinks && data.drinks.length > 0) {
-        const sorted = [...data.drinks].sort(
-          (a: Drink, b: Drink) =>
-            new Date(a.consumedAt).getTime() - new Date(b.consumedAt).getTime()
-        );
-
-        const points: ChartDataPoint[] = [];
-        const cumulativeDrinks: Array<{
-          ml: number;
-          alcoholPct: number;
-          consumedAt: Date;
-        }> = [];
-
-        for (const drink of sorted) {
-          cumulativeDrinks.push({
-            ml: drink.ml,
-            alcoholPct: drink.alcoholPct,
-            consumedAt: new Date(drink.consumedAt),
-          });
-
-          const p = calculatePromille(
-            cumulativeDrinks,
-            data.weightKg,
-            data.gender
-          );
-
-          points.push({
-            time: new Date(drink.consumedAt).toLocaleTimeString(locale === "en" ? "en-GB" : "hu-HU", {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            promille: p.currentPromille,
-          });
-        }
-
-        // Add current time point
-        points.push({
-          time: new Date().toLocaleTimeString(locale === "en" ? "en-GB" : "hu-HU", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          promille: result.currentPromille,
-        });
-
-        setChartData(points);
-      } else {
-        setChartData([]);
-      }
+      recalculate(data, data.drinks || []);
     } catch {
       // ignore
     } finally {
       setLoading(false);
     }
-  }, [userId, router, locale]);
+  }, [userId, router, recalculate]);
 
   useEffect(() => {
     if (!_hasHydrated) return;
@@ -125,11 +76,18 @@ export default function DashboardPage() {
     fetchData();
   }, [userId, router, fetchData, _hasHydrated]);
 
-  // Auto-refresh every 30 seconds
+  // Auto-refresh API data every 30 seconds
   useEffect(() => {
     const refreshInterval = setInterval(fetchData, 30000);
     return () => clearInterval(refreshInterval);
   }, [fetchData]);
+
+  // Client-side recalc every 60s (updates chart decay without API call)
+  useEffect(() => {
+    if (!user || drinks.length === 0) return;
+    const timer = setInterval(() => recalculate(user, drinks), 60000);
+    return () => clearInterval(timer);
+  }, [user, drinks, recalculate]);
 
   if (loading || !user || !promille) {
     return (
