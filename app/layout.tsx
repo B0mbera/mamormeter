@@ -8,20 +8,20 @@ import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MámorMéter — Választás 2026 · Április 12.",
-  description: "A 2026-os országgyűlési választás hivatalos ivós trackere! 🗳️🍻 Kövesd az ivásod, versenyezz a pártod színeiben! Április 12.",
+  title: "EFOTT Ivásszámláló — EFOTT 2026 · Velencei-tó",
+  description: "Az EFOTT fesztivál hivatalos ivós trackere! 🎪🍻 Kövesd az ivásod, versenyezz az egyetemed színeiben!",
   manifest: "/manifest.json",
   openGraph: {
-    title: "MámorMéter — Választás 2026",
-    description: "Promille tracker az 5 parlamenti párt versenyéhez! FIDESZ · TISZA · Mi Hazánk · DK · MKKP",
-    siteName: "MámorMéter",
+    title: "EFOTT Ivásszámláló — EFOTT 2026",
+    description: "Promille tracker az EFOTT-on. Versenyezz az egyetemed haverjaival! ELTE · BME · SZTE · DE · PPKE és még sokan mások.",
+    siteName: "EFOTT Ivásszámláló",
     type: "website",
     locale: "hu_HU",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MámorMéter — Választás 2026",
-    description: "Promille tracker az 5 parlamenti párt versenyéhez! FIDESZ · TISZA · Mi Hazánk · DK · MKKP",
+    title: "EFOTT Ivásszámláló — EFOTT 2026",
+    description: "Promille tracker az EFOTT-on. Versenyezz az egyetemed haverjaival!",
   },
 };
 

@@ -1,22 +1,20 @@
-# MámorMéter 🗳️🍻
+# EFOTT Ivásszámláló 🎪🍻
 
-Valós idejű promille tracker a **2026-os országgyűlési választásra** (Április 12.).
-
-> **Éles app:** [mamormeter.vercel.app](https://mamormeter.vercel.app)
+Valós idejű promille tracker az **EFOTT fesztiválra** — versenyezz az egyetemed színeiben!
 
 ## Funkciók
 
 - **Widmark-formula** promille számítás — nemre és testsúlyra kalibrált
-- **Gyors hozzáadás** — 13 preset ital (Sör, Heineken, Jäger, stb.)
+- **Reálisabb magyar italok** — kisfröccs, nagyfröccs, hosszúlépés, korsó, 4cl pálinka, koktélok
 - **Valós idejű promille görbe** — Recharts grafikon
-- **Ranglétra** — 24 órás + örökös, párt szűrővel (FIDESZ / TISZA / Mi Hazánk / DK / MKKP)
+- **Top 4 egyetem ranglétra** — 24 órás + örökös, top 10 magyar egyetem között
+- **Prevenciós tippek minden szinten** — víz, étel, taxi, segítséghívás
+- **„Egyéb" egyetem** szabad szöveggel + „Nem egyetemista" opció
 - **Regisztráció nélküli ranglétra** — vendégek is megtekinthetik
 - **Sötét mód** — persistent toggle minden oldalon
 - **Magyar / Angol** nyelvváltás
-- **Profanity filter** — csúnya nevek szűrése (HU + EN)
-- **1 perces cooldown** anti-spam védelem
-- **OG kép + favicon** — link preview és böngésző ikon
-- **Támogatás oldal** — Revolut link
+- **Profanity filter** — csúnya nevek/egyetemnevek szűrése (HU + EN)
+- **6‰ biztonsági cap** — klinikai határ feletti BAC nem rögzíthető
 
 ## Tech Stack
 
@@ -29,61 +27,46 @@ Valós idejű promille tracker a **2026-os országgyűlési választásra** (Áp
 | **Adatbázis**       | PostgreSQL (Neon.tech, serverless)   |
 | **ORM**             | Prisma 5                             |
 | **Hosting**         | Vercel                               |
-| **Dinamikus képek** | next/og ImageResponse (Edge Runtime) |
 
 ## Projekt struktúra
 
 ```
 app/
 ├── page.tsx              # Landing oldal
-├── onboarding/           # Profil létrehozás
-├── dashboard/            # Fő műszerfal + promille görbe
+├── onboarding/           # Profil + egyetem választás
+├── dashboard/            # Fő műszerfal + promille görbe + prevenciós tipp
 ├── add/                  # Ital hozzáadás (presetek + egyedi)
-├── leaderboard/          # Ranglétra (24h / örökös)
+├── leaderboard/          # Ranglétra (24h / örökös, top 4 egyetem)
 ├── support/              # Támogatás (Revolut)
-├── api/
-│   ├── users/            # POST create, GET [id] + promille
-│   ├── drinks/           # POST add, DELETE [id]
-│   ├── presets/          # GET 13 ital preset
-│   └── leaderboard/      # GET ranglétra (szűrők)
-├── icon.tsx              # Dinamikus PNG favicon (32×32)
-├── apple-icon.tsx        # Apple Touch Icon (180×180)
-└── opengraph-image.tsx   # OG kép (1200×630)
+└── api/                  # users, drinks, presets, leaderboard
 
 lib/
-├── widmark.ts            # Promille számítás (Widmark-formula)
+├── widmark.ts            # Promille számítás + prevenciós severity
 ├── profanity.ts          # Csúnya szó szűrő
-├── i18n.ts               # Magyar / Angol fordítások
-├── constants.ts          # Pártok, kategóriák
-└── prisma.ts             # Prisma client singleton
-
-store/
-├── useUserStore.ts       # User ID (localStorage)
-├── useLanguageStore.ts   # Nyelv (persist)
-└── useThemeStore.ts      # Sötét mód (persist)
+├── i18n.ts               # Magyar / Angol fordítások + prevenciós üzenetek
+├── universities.ts       # Top 10 magyar egyetem + helperek
+└── constants.ts          # Limitek, cooldown
 
 prisma/
 ├── schema.prisma         # User, Drink, DrinkPreset modellek
-└── seed.ts               # 13 preset ital
+├── seed.ts               # ~40 magyaros ital preset
+└── reset-users.ts        # User+Drink reset (presetek érintetlenek)
 ```
 
-## Deploy
-
-### Environment Variables
-
-| Variable       | Leírás                                   |
-| -------------- | ---------------------------------------- |
-| `DATABASE_URL` | PostgreSQL connection string (Neon.tech) |
-| `DIRECT_URL`   | Direct PostgreSQL URL (Neon.tech)        |
-
-### Setup
+## Setup
 
 ```bash
 npm install
 npx prisma generate
 npx prisma db push
-npx prisma db seed
+npm run db:seed
 npm run dev
+```
+
+## Adatbázis reset (csak User+Drink, presetek megmaradnak)
+
+```bash
+npm run db:reset-users
 ```
 
 ### Production deploy

@@ -1,7 +1,7 @@
 {
-  "name": "MámorMéter — Választás 2026",
-  "short_name": "MámorMéter",
-  "description": "A 2026-os országgyűlési választás hivatalos ivós trackere! Április 12.",
+  "name": "EFOTT Ivásszámláló — EFOTT 2026",
+  "short_name": "EFOTT Tracker",
+  "description": "Az EFOTT fesztivál hivatalos ivós trackere! Versenyezz az egyetemed színeiben.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

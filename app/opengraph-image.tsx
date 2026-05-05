@@ -1,11 +1,14 @@
 import { ImageResponse } from "next/og";
+import { TOP_UNIVERSITIES } from "@/lib/universities";
 
 export const runtime = "edge";
-export const alt = "MámorMéter — Választás 2026 · Április 12.";
+export const alt = "EFOTT Ivásszámláló — EFOTT 2026 · Velencei-tó";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OGImage() {
+  const featured = TOP_UNIVERSITIES.slice(0, 5);
+
   return new ImageResponse(
     (
       <div
@@ -20,8 +23,8 @@ export default function OGImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* Ballot emoji */}
-        <div style={{ fontSize: 120, marginBottom: 10, display: "flex" }}>🗳️</div>
+        {/* Festival tent emoji */}
+        <div style={{ fontSize: 120, marginBottom: 10, display: "flex" }}>🎪</div>
 
         {/* Title */}
         <div
@@ -33,7 +36,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          MámorMéter
+          EFOTT Ivásszámláló
         </div>
 
         {/* Subtitle */}
@@ -46,10 +49,10 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          Választás 2026 · Április 12.
+          EFOTT 2026 · Velencei-tó
         </div>
 
-        {/* Party badges */}
+        {/* University badges */}
         <div
           style={{
             display: "flex",
@@ -57,20 +60,14 @@ export default function OGImage() {
             marginTop: 40,
           }}
         >
-          {[
-            { id: "FIDESZ", color: "#f97316" },
-            { id: "TISZA", color: "#0ea5e9" },
-            { id: "Mi Hazánk", color: "#16a34a" },
-            { id: "DK", color: "#1d4ed8" },
-            { id: "MKKP", color: "#eab308" },
-          ].map((party) => (
+          {featured.map((u) => (
             <div
-              key={party.id}
+              key={u.id}
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: party.color,
+                backgroundColor: u.color,
                 color: "white",
                 fontSize: 22,
                 fontWeight: 700,
@@ -78,7 +75,7 @@ export default function OGImage() {
                 borderRadius: 12,
               }}
             >
-              {party.id}
+              {u.shortName}
             </div>
           ))}
         </div>
@@ -92,7 +89,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          Promille tracker az 5 parlamenti párt versenyéhez! 🍻
+          Versenyezz az egyetemed színeiben! 🍻
         </div>
       </div>
     ),

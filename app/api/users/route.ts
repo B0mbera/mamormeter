@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { CreateUserPayload } from "@/types";
 import { containsProfanity } from "@/lib/profanity";
+import { TOP_UNIVERSITIES, NON_STUDENT_ID, OTHER_ID } from "@/lib/universities";
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,10 +44,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const validParties = ["FIDESZ", "TISZA", "MIHAZANK", "DK", "MKKP"];
-    const university = body.university && validParties.includes(body.university)
-      ? body.university
-      : null;
+    const validTopIds = new Set([
+      ...TOP_UNIVERSITIES.map((u) => u.id),
+      NON_STUDENT_ID,
+    ]);
+
+    let university: string | null = null;
+    if (body.university) {
+      const raw = body.university.toString();
+      if (validTopIds.has(raw)) {
+        university = raw;
+      } else if (raw.startsWith(OTHER_ID + ":")) {
+        const custom = raw.slice(OTHER_ID.length + 1).trim().slice(0, 40);
+        if (custom.length === 0) {
+          return NextResponse.json(
+            { error: "University name required" },
+            { status: 400 }
+          );
+        }
+        if (containsProfanity(custom)) {
+          return NextResponse.json(
+            { error: "Choose a nicer university name" },
+            { status: 400 }
+          );
+        }
+        university = `${OTHER_ID}:${custom}`;
+      } else {
+        return NextResponse.json(
+          { error: "Invalid university" },
+          { status: 400 }
+        );
+      }
+    }
 
     const user = await prisma.user.create({
       data: {

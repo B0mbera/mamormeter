@@ -57,9 +57,9 @@ export default function SupportPage() {
         {/* Credits */}
         <Card>
           <CardContent className="pt-5 space-y-2 text-center">
-            <p className="text-sm font-semibold">🍻 MámorMéter</p>
+            <p className="text-sm font-semibold">🎪 EFOTT Ivásszámláló</p>
             <p className="text-xs text-violet-600 font-medium">
-              🗳️ Választás 2026 · Április 12.
+              🍻 EFOTT 2026 · Velencei-tó
             </p>
             <p className="text-xs text-muted-foreground">
               Made with ❤️ + 🍺

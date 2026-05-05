@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Navigation } from "@/components/Navigation";
 import { LeaderboardCard } from "@/components/LeaderboardCard";
 import { LeaderboardEntry, PartyScore } from "@/types";
-import { PARTIES } from "@/lib/constants";
+import { TOP_UNIVERSITIES } from "@/lib/universities";
 import { Trophy, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -73,8 +73,8 @@ export default function LeaderboardPage() {
   }
 
   const partyScoreLabel = period === "alltime"
-    ? (locale === "hu" ? "Össz. standard ital" : "Total standard drinks")
-    : (locale === "hu" ? "Össz. ezrelék (‰)" : "Total BAC (‰)");
+    ? t("leaderboard.universityScoreDrinks")
+    : t("leaderboard.universityScoreBac");
 
   return (
     <div className={userId ? "pb-20 pt-3" : "pb-6 pt-3"}>
@@ -101,15 +101,15 @@ export default function LeaderboardPage() {
         </div>
 
         <p className="text-xs text-center text-violet-600 font-medium">
-          🗳️ Választás 2026 · Április 12.
+          🎪 EFOTT 2026 · Velencei-tó
         </p>
 
-        {/* Party combined scores */}
+        {/* Top university scores */}
         {!uniFilter && partyScores.length > 0 && (
           <Card>
             <CardContent className="pt-3 pb-3">
               <p className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-                {locale === "hu" ? "Párt rangsor" : "Party ranking"}
+                {t("leaderboard.universityRanking")}
               </p>
               <div className="space-y-1.5">
                 {partyScores.map((p) => (
@@ -117,10 +117,10 @@ export default function LeaderboardPage() {
                     <span className="text-sm font-bold w-6 text-center">{getRankEmoji(p.rank)}</span>
                     <span className="text-base">{p.emoji}</span>
                     <span className="text-xs font-medium flex-1" style={{ color: p.color }}>
-                      {p.name}
+                      {locale === "hu" ? p.name : p.nameEn}
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      {p.memberCount} {locale === "hu" ? "fő" : "members"}
+                      {p.memberCount} {t("leaderboard.members")}
                     </span>
                     <span className="text-sm font-bold tabular-nums" style={{ color: p.color }}>
                       {period === "alltime"
@@ -149,7 +149,7 @@ export default function LeaderboardPage() {
             <TabsTrigger value="alltime">{t("leaderboard.alltime")}</TabsTrigger>
           </TabsList>
 
-          {/* Party filter */}
+          {/* University filter */}
           <div className="flex gap-1.5 overflow-x-auto py-2 scrollbar-hide">
               <Button
                 size="sm"
@@ -159,21 +159,21 @@ export default function LeaderboardPage() {
               >
                 {t("leaderboard.allParties")}
               </Button>
-              {PARTIES.map((party) => (
+              {TOP_UNIVERSITIES.map((uni) => (
                 <Button
-                  key={party.id}
+                  key={uni.id}
                   size="sm"
-                  variant={uniFilter === party.id ? "default" : "outline"}
+                  variant={uniFilter === uni.id ? "default" : "outline"}
                   className="h-7 text-[10px] sm:text-xs shrink-0 gap-1"
                   style={
-                    uniFilter === party.id
-                      ? { backgroundColor: party.color, borderColor: party.color }
+                    uniFilter === uni.id
+                      ? { backgroundColor: uni.color, borderColor: uni.color, color: "white" }
                       : {}
                   }
-                  onClick={() => setUniFilter(party.id)}
+                  onClick={() => setUniFilter(uni.id)}
                 >
-                  <span>{party.emoji}</span>
-                  {party.id}
+                  <span>{uni.emoji}</span>
+                  {uni.shortName}
                 </Button>
               ))}
             </div>

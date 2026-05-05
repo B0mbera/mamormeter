@@ -1,5 +1,5 @@
 {
-  "name": "mamormeter",
+  "name": "efott-ivasszamlalo",
   "version": "2.0.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "db:reset-users": "ts-node --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\"}\" prisma/reset-users.ts"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"

@@ -4,18 +4,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PromilleResult } from "@/types";
 import { useLanguageStore } from "@/store/useLanguageStore";
-import { getStatusText, getSoberingText } from "@/lib/i18n";
+import { getStatusText, getSoberingText, getPreventionText } from "@/lib/i18n";
+import { getPreventionSeverity } from "@/lib/widmark";
 import { Wine } from "lucide-react";
 
 interface PromilleCardProps {
   promille: PromilleResult;
 }
 
+const severityStyles = {
+  info: "bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-300",
+  warn: "bg-orange-500/10 border-orange-500/40 text-orange-700 dark:text-orange-300",
+  danger: "bg-red-500/15 border-red-500/50 text-red-700 dark:text-red-300",
+} as const;
+
 export function PromilleCard({ promille }: PromilleCardProps) {
   const { locale, t } = useLanguageStore();
 
-  const isDangerous = promille.status === "dangerous" || promille.status === "lethal";
+  const severity = getPreventionSeverity(promille.status);
   const isLethal = promille.status === "lethal";
+  const isDangerous = severity === "danger";
 
   return (
     <Card className={isDangerous ? "border-red-500/50 bg-red-500/5" : ""}>
@@ -47,28 +55,21 @@ export function PromilleCard({ promille }: PromilleCardProps) {
             className="text-xs sm:text-sm px-3 py-1"
             style={{
               backgroundColor: promille.statusColor,
-              color: isLethal ? "white" : "white",
+              color: "white",
               borderColor: "transparent",
             }}
           >
             {getStatusText(promille.status, locale)}
           </Badge>
 
-          {isDangerous && !isLethal && (
-            <div className="w-full rounded-lg bg-red-500/10 border border-red-500/30 p-3 text-center">
-              <p className="text-xs sm:text-sm font-semibold text-red-600 dark:text-red-400">
-                {t("bac.dangerWarning")}
-              </p>
-            </div>
-          )}
-
-          {isLethal && (
-            <div className="w-full rounded-lg bg-red-600/20 border border-red-600/50 p-3 text-center animate-pulse">
-              <p className="text-xs sm:text-sm font-bold text-red-700 dark:text-red-300">
-                {t("bac.lethalWarning")}
-              </p>
-            </div>
-          )}
+          {/* Prevention tip — appears at every level */}
+          <div
+            className={`w-full rounded-lg border p-3 text-center ${severityStyles[severity]} ${isLethal ? "animate-pulse" : ""}`}
+          >
+            <p className={`text-xs sm:text-sm ${isDangerous ? "font-bold" : "font-medium"}`}>
+              {getPreventionText(promille.status, locale)}
+            </p>
+          </div>
 
           <p className="text-xs sm:text-sm text-muted-foreground text-center">
             {getSoberingText(promille.soberingMinutes, locale)}

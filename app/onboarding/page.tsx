@@ -11,7 +11,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { PARTIES } from "@/lib/constants";
+import { TOP_UNIVERSITIES, NON_STUDENT_ID, OTHER_ID } from "@/lib/universities";
 import { containsProfanity } from "@/lib/profanity";
 import { toast } from "sonner";
 
@@ -23,7 +23,8 @@ export default function OnboardingPage() {
   const [name, setName] = useState("");
   const [weight, setWeight] = useState(70);
   const [gender, setGender] = useState<"male" | "female">("male");
-  const [university, setUniversity] = useState<string | null>(null);
+  const [universityChoice, setUniversityChoice] = useState<string | null>(null);
+  const [otherName, setOtherName] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit() {
@@ -39,9 +40,27 @@ export default function OnboardingPage() {
       toast.error(t("validation.nameProfanity"));
       return;
     }
-    if (!university) {
-      toast.error(t("validation.partyRequired"));
+    if (!universityChoice) {
+      toast.error(t("validation.universityRequired"));
       return;
+    }
+
+    let universityValue: string = universityChoice;
+    if (universityChoice === OTHER_ID) {
+      const trimmed = otherName.trim();
+      if (!trimmed) {
+        toast.error(t("validation.otherUniversityRequired"));
+        return;
+      }
+      if (trimmed.length > 40) {
+        toast.error(t("validation.otherUniversityTooLong"));
+        return;
+      }
+      if (containsProfanity(trimmed)) {
+        toast.error(t("validation.universityProfanity"));
+        return;
+      }
+      universityValue = `${OTHER_ID}:${trimmed}`;
     }
 
     setLoading(true);
@@ -53,7 +72,7 @@ export default function OnboardingPage() {
           name: name.trim(),
           weightKg: weight,
           gender,
-          university,
+          university: universityValue,
         }),
       });
 
@@ -83,9 +102,9 @@ export default function OnboardingPage() {
         </div>
 
         <div className="text-center space-y-1">
-          <h1 className="text-3xl sm:text-4xl font-bold">🗳️ MámorMéter</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold">🎪 EFOTT Ivásszámláló</h1>
           <p className="text-sm font-bold text-violet-600 dark:text-violet-400">
-            Választás 2026 · Április 12.
+            EFOTT 2026 · Velencei-tó
           </p>
           <p className="text-sm text-muted-foreground">{t("onboarding.subtitle")}</p>
         </div>
@@ -136,29 +155,57 @@ export default function OnboardingPage() {
               </div>
             </div>
 
-            {/* Party selector */}
+            {/* University selector */}
             <div className="space-y-2">
-              <Label>{t("onboarding.party")}</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  {PARTIES.map((party) => (
-                    <Button
-                      key={party.id}
-                      type="button"
-                      variant={university === party.id ? "default" : "outline"}
-                      className="h-14 flex gap-2 items-center"
-                      style={
-                        university === party.id
-                          ? { backgroundColor: party.color, borderColor: party.color }
-                          : { borderColor: party.color + "40" }
-                      }
-                      onClick={() => setUniversity(party.id)}
-                    >
-                      <span className="text-lg">{party.emoji}</span>
-                      <span className="text-xs font-bold">{party.name}</span>
-                    </Button>
-                  ))}
-                </div>
+              <Label>{t("onboarding.university")}</Label>
+              <div className="grid grid-cols-2 gap-2">
+                {TOP_UNIVERSITIES.map((u) => (
+                  <Button
+                    key={u.id}
+                    type="button"
+                    variant={universityChoice === u.id ? "default" : "outline"}
+                    className="h-12 flex gap-2 items-center justify-start px-3"
+                    style={
+                      universityChoice === u.id
+                        ? { backgroundColor: u.color, borderColor: u.color, color: "white" }
+                        : { borderColor: u.color + "40" }
+                    }
+                    onClick={() => setUniversityChoice(u.id)}
+                  >
+                    <span className="text-base">{u.emoji}</span>
+                    <span className="text-xs font-bold truncate">{u.shortName}</span>
+                  </Button>
+                ))}
+                <Button
+                  type="button"
+                  variant={universityChoice === NON_STUDENT_ID ? "default" : "outline"}
+                  className="h-12 flex gap-2 items-center justify-start px-3"
+                  onClick={() => setUniversityChoice(NON_STUDENT_ID)}
+                >
+                  <span className="text-base">🎒</span>
+                  <span className="text-xs font-bold truncate">{t("onboarding.nonStudent")}</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={universityChoice === OTHER_ID ? "default" : "outline"}
+                  className="h-12 flex gap-2 items-center justify-start px-3"
+                  onClick={() => setUniversityChoice(OTHER_ID)}
+                >
+                  <span className="text-base">🏫</span>
+                  <span className="text-xs font-bold truncate">{t("onboarding.other")}</span>
+                </Button>
               </div>
+
+              {universityChoice === OTHER_ID && (
+                <Input
+                  className="mt-2"
+                  placeholder={t("onboarding.otherUniversityPlaceholder")}
+                  value={otherName}
+                  onChange={(e) => setOtherName(e.target.value)}
+                  maxLength={40}
+                />
+              )}
+            </div>
 
             <Button
               className="w-full h-12 text-base"

@@ -1,6 +1,6 @@
 "use client";
 
-import { getParty } from "@/lib/constants";
+import { getUniversity } from "@/lib/universities";
 
 interface UniversityBadgeProps {
   universityId: string | null | undefined;
@@ -21,17 +21,17 @@ export function UniversityBadge({
 }: UniversityBadgeProps) {
   if (!universityId) return null;
 
-  const party = getParty(universityId);
-  if (!party) return null;
+  const uni = getUniversity(universityId);
+  if (!uni) return null;
 
   const s = sizes[size];
 
   return (
     <div className="flex items-center gap-1">
-      <span className={s.emoji}>{party.emoji}</span>
+      <span className={s.emoji}>{uni.emoji}</span>
       {showName && (
-        <span className={`${s.text} font-semibold`} style={{ color: party.color }}>
-          {party.name}
+        <span className={`${s.text} font-semibold`} style={{ color: uni.color }}>
+          {uni.shortName}
         </span>
       )}
     </div>

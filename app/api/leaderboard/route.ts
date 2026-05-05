@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { calculatePromille, calculateTotalAlcoholGrams } from "@/lib/widmark";
 import { LeaderboardEntry, PartyScore } from "@/types";
-import { PARTIES } from "@/lib/constants";
+import { TOP_UNIVERSITIES, LEADERBOARD_TOP_N } from "@/lib/universities";
 import { getCached, setCached } from "@/lib/cache";
 
 export const dynamic = "force-dynamic";
@@ -162,17 +162,17 @@ export async function GET(request: NextRequest) {
       partyTotals.set(pid, prev);
     }
 
-    const partyScores: PartyScore[] = PARTIES.map((party) => {
-      const totals = partyTotals.get(party.id) || { promille: 0, grams: 0 };
+    const partyScores: PartyScore[] = TOP_UNIVERSITIES.map((uni) => {
+      const totals = partyTotals.get(uni.id) || { promille: 0, grams: 0 };
       return {
-        partyId: party.id,
-        name: party.name,
-        nameEn: party.nameEn,
-        color: party.color,
-        emoji: party.emoji,
+        partyId: uni.id,
+        name: uni.name,
+        nameEn: uni.nameEn,
+        color: uni.color,
+        emoji: uni.emoji,
         totalPromille: Math.round(totals.promille * 100) / 100,
         totalAlcoholGrams: Math.round(totals.grams * 10) / 10,
-        memberCount: memberCountMap.get(party.id) || 0,
+        memberCount: memberCountMap.get(uni.id) || 0,
         rank: 0,
       };
     });
@@ -186,7 +186,9 @@ export async function GET(request: NextRequest) {
       p.rank = i + 1;
     });
 
-    const result = { entries: limited, partyScores };
+    const topPartyScores = partyScores.slice(0, LEADERBOARD_TOP_N);
+
+    const result = { entries: limited, partyScores: topPartyScores };
     setCached(cacheKey, result, CACHE_TTL);
 
     return NextResponse.json(result, {

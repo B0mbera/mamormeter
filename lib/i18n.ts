@@ -2,17 +2,17 @@ export type Locale = "hu" | "en";
 
 const translations = {
   hu: {
-    "app.title": "MámorMéter",
-    "app.event": "Választás 2026",
-    "app.subtitle": "Promille Tracker",
+    "app.title": "EFOTT Ivásszámláló",
+    "app.event": "EFOTT 2026",
+    "app.subtitle": "Fesztivál Promille Tracker",
 
     "nav.dashboard": "Műszerfal",
     "nav.add": "Hozzáadás",
     "nav.leaderboard": "Ranglétra",
     "nav.support": "Támogatás",
 
-    "onboarding.title": "Üdv a MámorMéterben!",
-    "onboarding.eventTitle": "Választás 2026",
+    "onboarding.title": "Üdv az EFOTT Ivásszámlálóban!",
+    "onboarding.eventTitle": "EFOTT 2026 · Velencei-tó",
     "onboarding.subtitle": "Készítsd el a profilod és kezdj el mérni!",
     "onboarding.name": "Becenév",
     "onboarding.namePlaceholder": "Max 20 karakter",
@@ -21,8 +21,12 @@ const translations = {
     "onboarding.gender": "Nem",
     "onboarding.male": "Férfi",
     "onboarding.female": "Nő",
-    "onboarding.party": "Párt",
-    "onboarding.selectParty": "Válassz pártot",
+    "onboarding.university": "Egyetem",
+    "onboarding.selectUniversity": "Válassz egyetemet",
+    "onboarding.otherUniversity": "Egyéb egyetem neve",
+    "onboarding.otherUniversityPlaceholder": "pl. Semmelweis Egyetem",
+    "onboarding.nonStudent": "Nem egyetemista",
+    "onboarding.other": "Egyéb",
     "onboarding.submit": "Indulhat!",
     "onboarding.loading": "Létrehozás...",
 
@@ -45,6 +49,14 @@ const translations = {
     "bac.dangerWarning": "⚠️ 3.5‰ felett életveszély! Kérj segítséget! 112",
     "bac.lethalWarning": "☠️ 5‰ felett klinikai halál! Azonnal hívj mentőt! 112",
     "bac.limitReached": "Elérted a biztonsági limitet (6‰). Nem adhatsz hozzá több italt.",
+
+    "prevention.sober": "💧 Indulás előtt egyél valamit, és igyál egy pohár vizet az első ital után. A teli has a legjobb ivócimbora.",
+    "prevention.happy": "🥨 Igyál egy korty vizet két ital közt — a fesztiválon hosszú lesz az este!",
+    "prevention.moderate": "🚕 Innen már ne vezess. Foglald le a Boltot/taxit időben, vagy maradj a sátornál.",
+    "prevention.drunk": "🍞 Egyél valami sósat (perec, pizza), igyál fél liter vizet, lassíts. Most kihagyhatsz egy kört.",
+    "prevention.very-drunk": "👯 Maradj a haveroddal, ne menj egyedül a tóhoz vagy a sátorba. Most állj le az ivással.",
+    "prevention.dangerous": "🚑 Hívd a fesztivál orvosi sátrát vagy a 112-t! Ne hagyd egyedül a haverod sem!",
+    "prevention.lethal": "☠️ KLINIKAI HALÁL ZÓNA — AZONNAL 112! Fektesd stabil oldalfekvésbe a haverod, ne hagyd magára!",
 
     "sobering.sober": "Józan vagy!",
     "sobering.time": "Kb. {hours} óra {minutes} perc múlva leszel józan",
@@ -71,10 +83,14 @@ const translations = {
     "leaderboard.you": "Te",
     "leaderboard.totalDrinks": "{count} standard ital",
     "leaderboard.soberIn": "{hours} ó {minutes} p múlva józan",
+    "leaderboard.universityRanking": "Top egyetemek",
+    "leaderboard.universityScoreBac": "Össz. ezrelék (‰)",
+    "leaderboard.universityScoreDrinks": "Össz. standard ital",
+    "leaderboard.members": "fő",
 
     "support.title": "Támogatás",
     "support.subtitle": "Az app üzemeltetése pénzbe kerül! 💸",
-    "support.description": "A szerver és adatbázis fenntartása havi költséggel jár. Ha használod és tetszik az app, kérlek támogasd az üzemeltetést — már egy sör ára is sokat segít!",
+    "support.description": "A szerver és adatbázis fenntartása havi költséggel jár. Ha használod és tetszik az app, kérlek támogasd az üzemeltetést — már egy fröccs ára is sokat segít!",
     "support.button": "Támogatás Revoluttal",
     "support.thanks": "Köszönjük, hogy segítesz fenntartani az appot! 🙏",
 
@@ -82,45 +98,48 @@ const translations = {
     "toast.drinkDeleted": "{name} törölve",
     "toast.error": "Hiba történt",
     "toast.networkError": "Hálózati hiba",
-    "toast.profileCreated": "Profil létrehozva! 🎉",
+    "toast.profileCreated": "Profil létrehozva! 🎪",
     "toast.cooldown": "Várj még {seconds} másodpercet!",
     "toast.redirecting": "Visszatérés a műszerfalra...",
 
     "landing.what": "Mi ez?",
-    "landing.intro": "A MámorMéter egy választási ivós app, amivel a 2026-os országgyűlési választások estéjén valós időben követheted az alkoholfogyasztásod, versenyezhetsz a barátaiddal és megnézheted melyik párt szurkolói bírják jobban.",
+    "landing.intro": "Az EFOTT Ivásszámláló egy fesztiválos ivós app, amivel az EFOTT alatt valós időben követheted az alkoholfogyasztásod, versenyezhetsz a haverokkal és megnézheted, melyik egyetem hallgatói bírják jobban.",
     "landing.howTitle": "Hogyan működik?",
-    "landing.step1": "Készíts profilt — add meg a beceneved, testsúlyod és válaszd ki a pártod",
-    "landing.step2": "Loggold az italaidat — egy kattintással a gyors gombokkal vagy válassz a 25+ preset közül",
+    "landing.step1": "Készíts profilt — add meg a beceneved, testsúlyod és válaszd ki az egyetemed",
+    "landing.step2": "Loggold az italaidat — egy kattintással a gyors gombokkal vagy válassz a presetek közül (fröccs, korsó, pálinka)",
     "landing.step3": "Kövesd az alkoholszinted — valós idejű grafikon mutatja a becsült véralkohol szinted",
-    "landing.step4": "Nézd a ranglétrát — ki iszik a legtöbbet? Melyik párt vezet összesítésben?",
+    "landing.step4": "Nézd a ranglétrát — ki iszik a legtöbbet? Melyik egyetem vezet a top 4-ben?",
     "landing.step5": "Tudd meg mikor leszel józan — az app kiszámolja a várható kijózanodási időt",
     "landing.featTitle": "Funkciók",
-    "landing.feat1": "🍺 25+ előre beállított magyar ital (sörök, pálinka, bor, koktélok)",
+    "landing.feat1": "🍺 Reálisabb magyar italok (kisfröccs, nagyfröccs, korsó, 4cl pálinka, koktélok)",
     "landing.feat2": "📊 Valós idejű alkoholszint görbe Widmark-képlet alapján",
-    "landing.feat3": "🏆 Élő ranglétra — egyéni és pártok szerinti összesítéssel",
-    "landing.feat4": "⏱️ Kijózanodási idő becslés",
+    "landing.feat3": "🏆 Élő ranglétra — egyéni és top 4 egyetem összesítéssel",
+    "landing.feat4": "⏱️ Kijózanodási idő becslés + prevenciós tippek minden szinten",
     "landing.feat5": "🎨 Sötét/világos mód, magyar és angol nyelv",
     "landing.disclaimer": "⚠️ Az app szórakoztatási célú, ne használd orvosi döntésekhez! Igyál felelősségteljesen.",
 
     "validation.nameRequired": "Add meg a beceneved!",
     "validation.nameTooLong": "Becenév maximum 20 karakter!",
     "validation.weightInvalid": "Testsúly 30-250 kg között legyen!",
-    "validation.partyRequired": "Válassz pártot!",
+    "validation.universityRequired": "Válassz egyetemet vagy a Nem egyetemista opciót!",
+    "validation.otherUniversityRequired": "Add meg az egyetem nevét!",
+    "validation.otherUniversityTooLong": "Egyetem neve maximum 40 karakter!",
     "validation.drinkNameRequired": "Add meg az ital nevét!",
     "validation.nameProfanity": "Válassz egy szebb becenevet!",
+    "validation.universityProfanity": "Válassz egy szebb egyetemnevet!",
   },
   en: {
-    "app.title": "MámorMéter",
-    "app.event": "Election 2026",
-    "app.subtitle": "Alcohol Tracker",
+    "app.title": "EFOTT Drink Tracker",
+    "app.event": "EFOTT 2026",
+    "app.subtitle": "Festival BAC Tracker",
 
     "nav.dashboard": "Dashboard",
     "nav.add": "Add Drink",
     "nav.leaderboard": "Leaderboard",
     "nav.support": "Support",
 
-    "onboarding.title": "Welcome to MámorMéter!",
-    "onboarding.eventTitle": "Election 2026",
+    "onboarding.title": "Welcome to the EFOTT Drink Tracker!",
+    "onboarding.eventTitle": "EFOTT 2026 · Lake Velence",
     "onboarding.subtitle": "Create your profile and start tracking!",
     "onboarding.name": "Nickname",
     "onboarding.namePlaceholder": "Max 20 characters",
@@ -129,8 +148,12 @@ const translations = {
     "onboarding.gender": "Gender",
     "onboarding.male": "Male",
     "onboarding.female": "Female",
-    "onboarding.party": "Party",
-    "onboarding.selectParty": "Select party",
+    "onboarding.university": "University",
+    "onboarding.selectUniversity": "Choose your university",
+    "onboarding.otherUniversity": "Other university name",
+    "onboarding.otherUniversityPlaceholder": "e.g. Semmelweis University",
+    "onboarding.nonStudent": "Not a student",
+    "onboarding.other": "Other",
     "onboarding.submit": "Let's go!",
     "onboarding.loading": "Creating...",
 
@@ -153,6 +176,14 @@ const translations = {
     "bac.dangerWarning": "⚠️ Above 3.5‰ is life-threatening! Get help! Call 112",
     "bac.lethalWarning": "☠️ Above 5‰ is clinical death! Call an ambulance! 112",
     "bac.limitReached": "You've reached the safety limit (6‰). Cannot add more drinks.",
+
+    "prevention.sober": "💧 Eat something before you start, and have a glass of water after your first drink. A full stomach is the best drinking buddy.",
+    "prevention.happy": "🥨 Sip water between drinks — it's a long festival night!",
+    "prevention.moderate": "🚕 Don't drive from here. Book a taxi early or stay near your tent.",
+    "prevention.drunk": "🍞 Eat something salty (pretzel, pizza), drink half a litre of water, slow down. You can skip this round.",
+    "prevention.very-drunk": "👯 Stay with a friend, don't wander to the lake or your tent alone. Stop drinking now.",
+    "prevention.dangerous": "🚑 Call the festival medical tent or 112! Don't leave your friend alone either!",
+    "prevention.lethal": "☠️ CLINICAL DEATH ZONE — CALL 112 NOW! Put your friend in recovery position, don't leave them alone!",
 
     "sobering.sober": "You're sober!",
     "sobering.time": "About {hours}h {minutes}m until sober",
@@ -179,10 +210,14 @@ const translations = {
     "leaderboard.you": "You",
     "leaderboard.totalDrinks": "{count} standard drinks",
     "leaderboard.soberIn": "{hours}h {minutes}m until sober",
+    "leaderboard.universityRanking": "Top universities",
+    "leaderboard.universityScoreBac": "Total BAC (‰)",
+    "leaderboard.universityScoreDrinks": "Total standard drinks",
+    "leaderboard.members": "members",
 
     "support.title": "Support",
     "support.subtitle": "Running this app costs money! 💸",
-    "support.description": "Server and database hosting has a monthly cost. If you use and enjoy the app, please support us — even the price of a beer helps a lot!",
+    "support.description": "Server and database hosting has a monthly cost. If you use and enjoy the app, please support us — even the price of a wine spritzer helps a lot!",
     "support.button": "Support via Revolut",
     "support.thanks": "Thanks for helping keep the app running! 🙏",
 
@@ -190,32 +225,35 @@ const translations = {
     "toast.drinkDeleted": "{name} deleted",
     "toast.error": "An error occurred",
     "toast.networkError": "Network error",
-    "toast.profileCreated": "Profile created! 🎉",
+    "toast.profileCreated": "Profile created! 🎪",
     "toast.cooldown": "Wait {seconds} seconds!",
     "toast.redirecting": "Redirecting to dashboard...",
 
     "landing.what": "What is this?",
-    "landing.intro": "MámorMéter is an election drinking app for tracking your alcohol intake in real time during the 2026 Hungarian parliamentary elections. Compete with friends and see which party's supporters can handle the most.",
+    "landing.intro": "The EFOTT Drink Tracker is a festival drinking app for tracking your alcohol intake in real time during EFOTT. Compete with friends and see which Hungarian university's students can handle the most.",
     "landing.howTitle": "How does it work?",
-    "landing.step1": "Create a profile — enter your nickname, weight and choose your party",
-    "landing.step2": "Log your drinks — one tap with quick buttons or pick from 25+ presets",
+    "landing.step1": "Create a profile — enter your nickname, weight and choose your university",
+    "landing.step2": "Log your drinks — one tap with quick buttons or pick from presets (spritzer, beer, pálinka)",
     "landing.step3": "Track your BAC — a real-time chart shows your estimated blood alcohol level",
-    "landing.step4": "Check the leaderboard — who drinks the most? Which party leads overall?",
+    "landing.step4": "Check the leaderboard — who drinks the most? Which university leads the top 4?",
     "landing.step5": "Know when you'll be sober — the app estimates your sobering time",
     "landing.featTitle": "Features",
-    "landing.feat1": "🍺 25+ preset Hungarian drinks (beers, pálinka, wine, cocktails)",
+    "landing.feat1": "🍺 Realistic Hungarian drinks (kisfröccs, nagyfröccs, korsó, 4cl pálinka, cocktails)",
     "landing.feat2": "📊 Real-time BAC curve based on the Widmark formula",
-    "landing.feat3": "🏆 Live leaderboard — individual and party rankings",
-    "landing.feat4": "⏱️ Estimated time until sober",
+    "landing.feat3": "🏆 Live leaderboard — individual and top 4 university rankings",
+    "landing.feat4": "⏱️ Sobering time estimate + prevention tips at every level",
     "landing.feat5": "🎨 Dark/light mode, Hungarian and English",
     "landing.disclaimer": "⚠️ This app is for entertainment only, not medical advice! Drink responsibly.",
 
     "validation.nameRequired": "Enter your nickname!",
     "validation.nameTooLong": "Nickname max 20 characters!",
     "validation.weightInvalid": "Weight must be between 30-250 kg!",
-    "validation.partyRequired": "Select a party!",
+    "validation.universityRequired": "Choose a university or 'Not a student'!",
+    "validation.otherUniversityRequired": "Enter the university name!",
+    "validation.otherUniversityTooLong": "University name max 40 characters!",
     "validation.drinkNameRequired": "Enter the drink name!",
     "validation.nameProfanity": "Please choose a nicer nickname!",
+    "validation.universityProfanity": "Please choose a nicer university name!",
   },
 } as const;
 
@@ -240,6 +278,14 @@ export function getStatusText(
   locale: Locale
 ): string {
   const key = `status.${status}` as TranslationKey;
+  return getTranslation(locale, key);
+}
+
+export function getPreventionText(
+  status: string,
+  locale: Locale
+): string {
+  const key = `prevention.${status}` as TranslationKey;
   return getTranslation(locale, key);
 }
 

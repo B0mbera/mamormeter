@@ -80,6 +80,14 @@ export function getPromilleStatus(promille: number): {
   return { status: "lethal", statusColor: "#000000" };
 }
 
+export type PreventionSeverity = "info" | "warn" | "danger";
+
+export function getPreventionSeverity(status: PromilleStatus): PreventionSeverity {
+  if (status === "sober" || status === "happy") return "info";
+  if (status === "dangerous" || status === "lethal") return "danger";
+  return "warn";
+}
+
 export function calculateTotalAlcoholGrams(drinks: DrinkInput[]): number {
   return drinks.reduce(
     (sum, drink) => sum + calculateAlcoholGrams(drink.ml, drink.alcoholPct),
@@ -116,10 +124,7 @@ export function calculateChartData(
   );
   // Show chart up to 30 min into the future, but at most until sober
   const chartEnd = new Date(
-    Math.min(
-      Math.max(now.getTime() + 30 * 60 * 1000, endTime.getTime()),
-      endTime.getTime()
-    )
+    Math.min(now.getTime() + 30 * 60 * 1000, endTime.getTime())
   );
 
   const points: ChartDataPoint[] = [];

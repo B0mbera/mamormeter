@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { LeaderboardEntry } from "@/types";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { getStatusText, getSoberingText } from "@/lib/i18n";
-import { getParty } from "@/lib/constants";
+import { getUniversity } from "@/lib/universities";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface LeaderboardCardProps {
@@ -25,7 +25,7 @@ function getRankDisplay(rank: number): string {
 export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardProps) {
   const { locale, t } = useLanguageStore();
   const { user, promille, totalAlcoholGrams, rank, drinksSummary } = entry;
-  const party = getParty(user.university);
+  const party = getUniversity(user.university);
   const [expanded, setExpanded] = useState(false);
 
   const standardDrinks = Math.round((totalAlcoholGrams / 10) * 10) / 10;
@@ -64,7 +64,7 @@ export function LeaderboardCard({ entry, isCurrentUser, mode }: LeaderboardCardP
             <div className="flex items-center gap-1.5 mt-0.5">
               {party && (
                 <span className="text-[10px] font-medium" style={{ color: party.color }}>
-                  {party.name}
+                  {party.shortName}
                 </span>
               )}
               <p className="text-[10px] sm:text-xs text-muted-foreground">
